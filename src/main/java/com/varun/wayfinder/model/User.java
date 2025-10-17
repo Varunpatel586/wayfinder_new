@@ -10,15 +10,31 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
 
+    // ---------- Primary Key ----------
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    // ---------- Authentication ----------
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
+    // ---------- Profile Info ----------
+    private String fullName;
+    private String email;
+    private String contactNumber;
+    private String country;
+    private String zipCode;
+
+    @Column(length = 500)
+    private String bio;
+
+    private String profileImageUrl = "https://via.placeholder.com/100";
+
+    // ---------- Constructors ----------
     public User() {}
 
     public User(String username, String password) {

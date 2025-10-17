@@ -17,6 +17,18 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
+    private boolean isValidToken(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            String username = jwtUtil.extractUsername(token);
+            return username != null && !username.isEmpty() && jwtUtil.validateToken(token, username);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Autowired
     public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
@@ -24,12 +36,6 @@ public class AuthController {
     }
 
     // Show login page
-    @GetMapping("/")
-    public String showLoginPage(Model model) {
-        return "SignIn";
-    }
-
-    // Handle login
     @PostMapping("/login")
     public String login(@RequestParam String username,
                         @RequestParam String password,
@@ -49,22 +55,39 @@ public class AuthController {
         return "redirect:/";
     }
 
-    // Show registration page
-    @GetMapping("/SignUp")
-    public String showRegisterPage() {
-        return "SignUp";
+    // Redirect to SignIn
+    @GetMapping("/")
+    public String showLoginPage(@CookieValue(value = "token", required = false) String token, HttpServletResponse response) {
+        if (isValidToken(token)) {
+            return "redirect:/welcome";
+        }
+        return "SignIn";
     }
+
 
     // Handle registration
     @PostMapping("/register")
     public String register(@RequestParam String username,
                            @RequestParam String password,
+                           HttpServletResponse response,
                            RedirectAttributes redirectAttributes,
                            Model model) {
-
         if (userService.registerUser(username, password)) {
-            redirectAttributes.addFlashAttribute("message", "Registration successful! Please login.");
-            return "redirect:/";
+            // Generate token for the newly registered user
+            String token = jwtUtil.generateToken(username);
+
+            // Set the token in cookie
+            Cookie cookie = new Cookie("token", token);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60); // 1 day
+            response.addCookie(cookie);
+
+            // Add success message
+            redirectAttributes.addFlashAttribute("message", "Registration successful! Welcome, " + username + "!");
+
+            // Redirect to welcome page
+            return "redirect:/welcome";
         } else {
             model.addAttribute("error", "Username already exists!");
             return "SignUp";
@@ -98,14 +121,30 @@ public class AuthController {
     @GetMapping("/welcome")
     public String welcome(@CookieValue(value = "token", required = false) String token,
                           Model model,
-                          HttpServletRequest request) {
-        if (token == null || jwtUtil.isTokenExpired(token)) {
+                          HttpServletRequest request,
+                          HttpServletResponse response) {
+        try {
+            if (token == null || token.trim().isEmpty() || jwtUtil.isTokenExpired(token)) {
+                return "redirect:/";
+            }
+
+            String username = jwtUtil.extractUsername(token);
+            if (username == null || username.isEmpty()) {
+                throw new RuntimeException("Invalid token: No username found");
+            }
+
+            model.addAttribute("username", username);
+            request.setAttribute("username", username);
+            return "welcome";
+
+        } catch (Exception e) {
+            System.err.println("Error in welcome endpoint: " + e.getMessage());
+            // Clear invalid token
+            Cookie cookie = new Cookie("token", "");
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
             return "redirect:/";
         }
-        String username = jwtUtil.extractUsername(token);
-        model.addAttribute("username", username);
-        // Also add the username to the request scope for the navbar
-        request.setAttribute("username", username);
-        return "welcome";
     }
 }

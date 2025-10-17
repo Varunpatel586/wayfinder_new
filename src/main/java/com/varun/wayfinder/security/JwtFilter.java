@@ -24,8 +24,9 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
+        // Allow access to static resources and auth pages without authentication
         if (path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/images/") ||
-                path.equals("/") || path.equals("/login") || path.equals("/register")) {
+                path.equals("/") || path.equals("/login") || path.equals("/register") || path.equals("/SignUp")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -41,16 +42,24 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        if (token != null) {
+        if (token != null && !token.trim().isEmpty()) {
             try {
                 String username = jwtUtil.extractUsername(token);
-                if (username != null && jwtUtil.validateToken(token, username)) {
+                if (username != null && !username.isEmpty() && jwtUtil.validateToken(token, username)) {
+                    // Token is valid, proceed with the request
                     request.setAttribute("username", username);
                     filterChain.doFilter(request, response);
                     return;
+                } else {
+                    System.out.println("Token validation failed for user: " + username);
                 }
             } catch (Exception e) {
-                // Token is invalid
+                System.err.println("Error validating token: " + e.getMessage());
+                // Clear invalid token
+                Cookie cookie = new Cookie("token", "");
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
             }
         }
 
