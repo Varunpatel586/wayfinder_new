@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WayFinder - Sign Up</title>
+    <link rel="stylesheet" th:href="@{/css/SignUp.css}">
+</head>
+<body>
+<div class="card">
+    <div class="logo">W</div>
+    <h2>Create your account</h2>
+    <form th:action="@{/register}" method="post">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Choose a username" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create a password" required>
+        </div>
+        <button type="submit" class="btn btn-green">SIGN UP</button>
+        <div class="error-message" th:if="${error}" style="color: red; margin-top: 10px;" th:text="${error}"></div>
+        <div class="success-message" th:if="${message}" style="color: green; margin-top: 10px;" th:text="${message}"></div>
+    </form>
+
+    <div class="divider">or sign up with</div>
+    <div class="socials">
+        <button type="button"><img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="Google"></button>
+        <button type="button"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></button>
+        <button type="button"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></button>
+    </div>
+
+    <div class="signin">
+        Already have an account? <a th:href="@{/}">SIGN IN</a>
+    </div>
+</div>
+</body>
+</html>
