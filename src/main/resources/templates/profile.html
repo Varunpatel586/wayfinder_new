@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Profile Page</title>
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>Travel Profile</h2>
+    <ul>
+        <li>Account Settings</li>
+        <li>Update Password</li>
+        <li>Help Center</li>
+        <li>Logout</li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="profile-card">
+        <img src="https://via.placeholder.com/80" alt="User Photo">
+        <div class="profile-info">
+            <h3>Varun Patel</h3>
+            <p>Email: varunxyz@gmail.com</p>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h2>Update Your Travel Profile</h2>
+        <form>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" value="Varun Patel">
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" value="varunxyz@gmail.com">
+            </div>
+
+            <div class="form-group">
+                <label>Contact Number</label>
+                <input type="tel" placeholder="Enter your contact number">
+            </div>
+
+            <div class="form-group">
+                <label>Country</label>
+                <select>
+                    <option>Bangladesh</option>
+                    <option>India</option>
+                    <option>USA</option>
+                    <option>UK</option>
+                    <option>Australia</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Zip Code</label>
+                <input type="text" value="6400">
+            </div>
+
+            <button type="submit" class="btn">Update Information</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

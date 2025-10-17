@@ -20,9 +20,15 @@ public class UserService {
         return true;
     }
 
-    public boolean authenticate(String username, String password) {
+    public User authenticate(String username, String password) {
         User user = userRepository.findByUsername(username);
-        if (user == null) return false;
-        return user.getPassword().equals(password);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

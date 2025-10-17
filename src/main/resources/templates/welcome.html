@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Welcome</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - WayFinder</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
-<h2>Welcome!</h2>
-<p th:text="'Hello, ' + ${username} + '!'"></p>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <div class="container">
+    <h1>Welcome, <span th:text="${username}">User</span>!</h1>
+</div>
 </body>
 </html>
