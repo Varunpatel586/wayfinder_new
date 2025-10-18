@@ -40,14 +40,13 @@ async function loadTrips() {
         const response = await fetch('/api/my-trips', {
             method: 'GET',
             headers: headers,
-            credentials: 'include' // Important: sends cookies with request
+            credentials: 'include'
         });
 
         console.log('Response status:', response.status);
 
         if (!response.ok) {
             if (response.status === 401) {
-                // Unauthorized - redirect to login
                 window.location.href = '/login';
                 return;
             }
@@ -99,6 +98,9 @@ function createTripCard(trip) {
     const statusClass = trip.status.toLowerCase();
     const statusLabel = trip.status === 'UPCOMING' ? 'Upcoming' : 'Completed';
 
+    // DEBUG: Log what we're creating
+    console.log('Creating card for:', trip.placeName, 'PlaceID:', trip.placeId, 'TripID:', trip.id);
+
     card.innerHTML = `
         <div class="trip-card-header">
             <span class="trip-name">${trip.placeName}</span>
@@ -109,17 +111,31 @@ function createTripCard(trip) {
              onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
         <div class="trip-dates">${trip.dateRange}</div>
         <div class="trip-buttons">
-            <button class="view-btn" onclick="viewTripDetails(${trip.id})">View Details</button>
-            <button class="edit-btn" onclick="deleteTrip(${trip.id})">Delete Trip</button>
+            <button class="view-btn" data-place-id="${trip.placeId}" data-trip-id="${trip.id}">View Place</button>
+            <button class="edit-btn" data-trip-id="${trip.id}">Delete Trip</button>
         </div>
     `;
 
-    return card;
-}
+    // Add event listeners using data attributes (cleaner approach)
+    const viewBtn = card.querySelector('.view-btn');
+    const deleteBtn = card.querySelector('.edit-btn');
 
-// View trip details
-function viewTripDetails(tripId) {
-    window.location.href = `/trip/${tripId}`;
+    viewBtn.addEventListener('click', function() {
+        const placeId = this.getAttribute('data-place-id');
+        console.log('View button clicked - navigating to place:', placeId);
+        if (placeId) {
+            window.location.href = `/place/${placeId}`;
+        } else {
+            console.error('No placeId found!');
+        }
+    });
+
+    deleteBtn.addEventListener('click', function() {
+        const tripId = this.getAttribute('data-trip-id');
+        deleteTrip(tripId);
+    });
+
+    return card;
 }
 
 // Delete trip
@@ -146,7 +162,6 @@ async function deleteTrip(tripId) {
         });
 
         if (response.ok) {
-            // Reload trips after deletion
             loadTrips();
         } else {
             alert('Failed to delete trip. Please try again.');

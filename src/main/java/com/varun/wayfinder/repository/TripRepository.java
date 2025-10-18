@@ -16,8 +16,14 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
 
     List<Trip> findByUserAndStatusOrderByStartDateAsc(User user, TripStatus status);
 
-    @Query("SELECT t FROM Trip t WHERE t.user = ?1 ORDER BY " +
-            "CASE WHEN t.status = 'UPCOMING' THEN 0 ELSE 1 END, " +
-            "t.startDate ASC")
+    @Query("""
+           SELECT DISTINCT t
+           FROM Trip t
+           JOIN FETCH t.place p
+           LEFT JOIN FETCH p.images
+           WHERE t.user = ?1
+           ORDER BY CASE WHEN t.status = 'UPCOMING' THEN 0 ELSE 1 END,
+                    t.startDate ASC
+           """)
     List<Trip> findByUserOrderByStatusAndDate(User user);
 }
