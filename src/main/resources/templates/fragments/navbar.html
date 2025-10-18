@@ -13,7 +13,7 @@
 
         <a th:if="${username != null}"
            th:href="@{/profile}"
-           th:text="'Welcome, ' + ${username}">Profile</a>
+           th:text="Profile">Profile</a>
 
         <a th:if="${username == null}"
            th:href="@{/login}">Login</a>
@@ -21,10 +21,6 @@
         <a th:if="${username == null}"
            class="btn"
            th:href="@{/start}">Start Your Journey</a>
-
-        <form th:if="${username != null}" th:action="@{/logout}" method="post" style="display:inline;">
-            <button type="submit" class="btn">Logout</button>
-        </form>
     </nav>
 </header>
 </body>

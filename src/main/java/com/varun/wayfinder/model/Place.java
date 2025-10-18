@@ -13,7 +13,6 @@ import java.util.List;
 public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "BIGINT", nullable = false)
     private Long id;
 
     @Column(nullable = false)

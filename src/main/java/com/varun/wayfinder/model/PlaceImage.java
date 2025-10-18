@@ -11,7 +11,6 @@ import lombok.Setter;
 public class PlaceImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "BIGINT", nullable = false)
     private Long id;
 
     @Column(nullable = false)

@@ -2,52 +2,59 @@ package com.varun.wayfinder.controller;
 
 import com.varun.wayfinder.model.User;
 import com.varun.wayfinder.repository.UserRepository;
+import com.varun.wayfinder.security.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/profile")
 public class ProfileController {
 
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
-    public ProfileController(UserRepository userRepository) {
+    public ProfileController(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping
-    public String showProfile(Model model, HttpServletRequest request) {
-        String username = (String) request.getAttribute("username");
-
-        if (username == null) {
-            return "redirect:/login";
+    // --- view profile ---
+    @GetMapping("/profile")
+    public String showProfile(@CookieValue(value = "token", defaultValue = "") String token,
+                              Model model) {
+        if (token.isEmpty() || jwtUtil.isTokenExpired(token)) {
+            return "redirect:/";
         }
 
+        String username = jwtUtil.extractUsername(token);
         User user = userRepository.findByUsername(username);
-        model.addAttribute("user", user);
+        if (user == null) {
+            return "redirect:/"; // unexpected: token user not in DB
+        }
 
+        model.addAttribute("user", user);
         return "profile";
     }
 
-    @PostMapping("/update")
-    public String updateProfile(@ModelAttribute User updatedUser, HttpServletRequest request) {
-        String username = (String) request.getAttribute("username");
-
-        if (username == null) {
-            return "redirect:/login";
+    // --- update profile ---
+    @PostMapping("/profile/update")
+    public String updateProfile(@CookieValue(value = "token", defaultValue = "") String token,
+                                @ModelAttribute("user") User updatedUser,
+                                Model model) {
+        if (token.isEmpty() || jwtUtil.isTokenExpired(token)) {
+            return "redirect:/";
         }
 
-        User existingUser = userRepository.findByUsername(username);
-        if (existingUser != null) {
-            existingUser.setFullName(updatedUser.getFullName());
-            existingUser.setEmail(updatedUser.getEmail());
-            existingUser.setContactNumber(updatedUser.getContactNumber());
-            existingUser.setCountry(updatedUser.getCountry());
-            existingUser.setZipCode(updatedUser.getZipCode());
-
-            userRepository.save(existingUser);
+        String username = jwtUtil.extractUsername(token);
+        User existing = userRepository.findByUsername(username);
+        if (existing != null) {
+            existing.setFullName(updatedUser.getFullName());
+            existing.setEmail(updatedUser.getEmail());
+            existing.setContactNumber(updatedUser.getContactNumber());
+            existing.setCountry(updatedUser.getCountry());
+            existing.setZipCode(updatedUser.getZipCode());
+            userRepository.save(existing);
         }
 
         return "redirect:/profile";

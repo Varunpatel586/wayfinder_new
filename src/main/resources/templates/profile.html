@@ -22,10 +22,18 @@
 
 <div class="main-content">
     <div class="profile-card">
-        <img th:src="${user.profileImageUrl}" alt="User Photo">
+        <!-- null‑safe image -->
+        <img th:src="${user != null && user.profileImageUrl != null
+                        ? user.profileImageUrl
+                        : '/image/profile-placeholder.jpg'}"
+             alt="User Photo">
         <div class="profile-info">
-            <h3 th:text="${user.fullName} ?: 'New User'">User Name</h3>
-            <p th:text="'Email: ' + ${user.email} ?: 'Not Provided'"></p>
+            <h3 th:text="${user != null && user.fullName != null
+                ? user.fullName
+                : 'New User'}">User Name</h3>
+            <p th:text="'Email: ' + (${user != null && user.email != null
+                            ? user.email
+                            : 'Not Provided'})"></p>
         </div>
     </div>
 
@@ -51,11 +59,11 @@
                 <label>Country</label>
                 <select th:field="*{country}">
                     <option value="">Select Country</option>
-                    <option>India</option>
-                    <option>USA</option>
-                    <option>UK</option>
-                    <option>Australia</option>
-                    <option>Bangladesh</option>
+                    <option value="India">India</option>
+                    <option value="USA">USA</option>
+                    <option value="UK">UK</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Bangladesh">Bangladesh</option>
                 </select>
             </div>
 
@@ -64,7 +72,7 @@
                 <input type="text" th:field="*{zipCode}">
             </div>
 
-            <button type="submit" class="btn">Update Information</button>
+            <button class="btn" type="submit">Update</button>
         </form>
     </div>
 </div>
