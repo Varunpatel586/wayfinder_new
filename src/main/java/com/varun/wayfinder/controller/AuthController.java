@@ -44,15 +44,17 @@ public class AuthController {
         User user = userService.authenticate(username, password);
         if (user != null) {
             String token = jwtUtil.generateToken(user.getUsername());
+
             Cookie cookie = new Cookie("token", token);
-            cookie.setHttpOnly(true);
+            cookie.setHttpOnly(false);
             cookie.setPath("/");
-            cookie.setMaxAge(24 * 60 * 60); // 1 day
+            cookie.setMaxAge(24 * 60 * 60);
             response.addCookie(cookie);
-            return "redirect:/Home";
+
+            return "redirect:/";
         }
         redirectAttributes.addFlashAttribute("error", "Invalid username or password");
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     // Redirect to SignIn

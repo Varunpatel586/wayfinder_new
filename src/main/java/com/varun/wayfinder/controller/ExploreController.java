@@ -43,15 +43,15 @@ public class ExploreController {
         return placeService.getTopRatedPlaces();
     }
 
-    @GetMapping("/place/{id}")
-    public String placeDetails(@PathVariable Long id, Model model) {
-        model.addAttribute("placeId", id);
-        return "place-details";
-    }
-
-    @GetMapping("/api/places/{id}")
-    @ResponseBody
-    public PlaceDTO getPlace(@PathVariable Long id) {
-        return placeService.getPlaceById(id);
-    }
+//    @GetMapping("/place/{id}")
+//    public String placeDetails(@PathVariable Long id, Model model) {
+//        model.addAttribute("placeId", id);
+//        return "place-details";
+//    }
+//
+//    @GetMapping("/api/places/{id}")
+//    @ResponseBody
+//    public PlaceDTO getPlace(@PathVariable Long id) {
+//        return placeService.getPlaceById(id);
+//    }
 }

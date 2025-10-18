@@ -1,8 +1,3 @@
-Perfect! Now I can see the actual table structure. You're right — the `places` table is **missing** the `category` and `country` columns.
-
-Let's add them first, then insert the data.
-
----
 
 ## 🔧 Step 1: Add Missing Columns
 

@@ -2,6 +2,7 @@ package com.varun.wayfinder.service;
 
 import com.varun.wayfinder.dto.TripDTO;
 import com.varun.wayfinder.model.*;
+import com.varun.wayfinder.repository.PlaceRepository;
 import com.varun.wayfinder.repository.TripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class TripService {
 
     @Autowired
     private TripRepository tripRepository;
+
+    @Autowired
+    private PlaceRepository placeRepository;
 
     public List<TripDTO> getUserTrips(User user) {
         List<Trip> trips = tripRepository.findByUserOrderByStatusAndDate(user);
@@ -39,9 +43,18 @@ public class TripService {
                 .collect(Collectors.toList());
     }
 
-    public Trip createTrip(User user, Long placeId, LocalDate startDate, LocalDate endDate) {
-        // Implementation to create a new trip
-        return null; // Implement as needed
+    public Trip createTrip(User user, Long placeId, LocalDate startDate, LocalDate endDate, String notes) {
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new RuntimeException("Place not found"));
+
+        Trip trip = new Trip();
+        trip.setUser(user);
+        trip.setPlace(place);
+        trip.setStartDate(startDate);
+        trip.setEndDate(endDate);
+        trip.setNotes(notes);
+
+        return tripRepository.save(trip);
     }
 
     public void deleteTrip(Long tripId, User user) {
@@ -72,7 +85,6 @@ public class TripService {
 
     private String getPlaceImage(Place place) {
         if (place.getImages() != null && !place.getImages().isEmpty()) {
-            // Try to get primary image first
             return place.getImages().stream()
                     .filter(img -> img.getIsPrimary() != null && img.getIsPrimary())
                     .findFirst()
