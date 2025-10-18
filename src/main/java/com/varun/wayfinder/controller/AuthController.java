@@ -17,6 +17,18 @@ public class AuthController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
+    private boolean isValidToken(String token) {
+        if (token == null || token.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            String username = jwtUtil.extractUsername(token);
+            return username != null && !username.isEmpty() && jwtUtil.validateToken(token, username);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     @Autowired
     public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
@@ -24,12 +36,6 @@ public class AuthController {
     }
 
     // Show login page
-    @GetMapping("/")
-    public String showLoginPage(Model model) {
-        return "SignIn";
-    }
-
-    // Handle login
     @PostMapping("/login")
     public String login(@RequestParam String username,
                         @RequestParam String password,
@@ -43,69 +49,117 @@ public class AuthController {
             cookie.setPath("/");
             cookie.setMaxAge(24 * 60 * 60); // 1 day
             response.addCookie(cookie);
-            return "redirect:/welcome";
+            return "redirect:/Home";
         }
         redirectAttributes.addFlashAttribute("error", "Invalid username or password");
         return "redirect:/";
     }
 
-    // Show registration page
+    // Redirect to SignIn
+    @GetMapping("/")
+    public String showLoginPage(@CookieValue(value = "token", required = false) String token, HttpServletResponse response) {
+        if (isValidToken(token)) {
+            return "redirect:/Home";
+        }
+        return "SignIn";
+    }
+
+
+    // Handle registration
     @GetMapping("/SignUp")
-    public String showRegisterPage() {
+    public String showSignUpPage(@CookieValue(value = "token", required = false) String token) {
+        if (isValidToken(token)) {
+            // Already logged in → skip signup
+            return "redirect:/Home";
+        }
+        // Just render the template
         return "SignUp";
     }
 
-    // Handle registration
-    @PostMapping("/register")
+    // Handle form submission (POST)
+    @PostMapping("/SignUp")
     public String register(@RequestParam String username,
                            @RequestParam String password,
+                           HttpServletResponse response,
                            RedirectAttributes redirectAttributes,
                            Model model) {
 
         if (userService.registerUser(username, password)) {
-            redirectAttributes.addFlashAttribute("message", "Registration successful! Please login.");
-            return "redirect:/";
+            // Generate token for the newly registered user
+            String token = jwtUtil.generateToken(username);
+
+            Cookie cookie = new Cookie("token", token);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60);  // 1day
+            response.addCookie(cookie);
+
+            redirectAttributes.addFlashAttribute("message",
+                    "Registration successful! Welcome, " + username + "!");
+            return "redirect:/Home";
         } else {
             model.addAttribute("error", "Username already exists!");
             return "SignUp";
         }
     }
 
-    // Dashboard - protected page
-    @GetMapping("/profile")
-    public String showProfile(@CookieValue(value = "token", defaultValue = "") String token,
-                              Model model) {
-        if (token.isEmpty() || jwtUtil.isTokenExpired(token)) {
-            return "redirect:/";
-        }
-        String username = jwtUtil.extractUsername(token);
-        model.addAttribute("username", username);
-        return "profile";
-    }
+//    // Dashboard - protected page
+//    @GetMapping("/profile")
+//    public String showProfile(@CookieValue(value = "token", defaultValue = "") String token,
+//                              Model model) {
+//        if (token.isEmpty() || jwtUtil.isTokenExpired(token)) {
+//            return "redirect:/";
+//        }
+//        String username = jwtUtil.extractUsername(token);
+//
+//        // fetch user from DB
+//        User user = userService.findByUsername(username);
+//
+//        // add it for Thymeleaf
+//        model.addAttribute("user", user);
+//        return "profile";
+//    }
 
     // Logout
     @PostMapping("/logout")
     public String logout(HttpServletResponse response) {
-        // Invalidate the JWT token by setting an expired cookie
         Cookie cookie = new Cookie("token", null);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(0); // This will delete the cookie
+        cookie.setMaxAge(0);            // delete the cookie
         response.addCookie(cookie);
-        return "redirect:/login?logout";
+
+        // After logout, back to login page or home screen
+        return "redirect:/";
     }
 
-    @GetMapping("/welcome")
+    @GetMapping("/Home")
     public String welcome(@CookieValue(value = "token", required = false) String token,
                           Model model,
-                          HttpServletRequest request) {
-        if (token == null || jwtUtil.isTokenExpired(token)) {
+                          HttpServletRequest request,
+                          HttpServletResponse response) {
+        try {
+            if (token == null || token.trim().isEmpty() || jwtUtil.isTokenExpired(token)) {
+                return "redirect:/";
+            }
+
+            String username = jwtUtil.extractUsername(token);
+            if (username == null || username.isEmpty()) {
+                throw new RuntimeException("Invalid token: No username found");
+            }
+
+            model.addAttribute("username", username);
+            request.setAttribute("username", username);
+            return "Home";
+
+        } catch (Exception e) {
+            System.err.println("Error in Home endpoint: " + e.getMessage());
+            // Clear invalid token
+            Cookie cookie = new Cookie("token", "");
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
             return "redirect:/";
         }
-        String username = jwtUtil.extractUsername(token);
-        model.addAttribute("username", username);
-        // Also add the username to the request scope for the navbar
-        request.setAttribute("username", username);
-        return "welcome";
     }
 }
