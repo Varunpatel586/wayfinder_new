@@ -30,6 +30,8 @@ public class Place {
     private double longitude;
     private Float averageRating;
     private Integer reviewCount;
+    private String category;
+    private String country;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -39,4 +41,16 @@ public class Place {
 
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlaceImage> images;
+
+    // Helper method to get primary image
+    public String getPrimaryImageUrl() {
+        if (images != null && !images.isEmpty()) {
+            return images.stream()
+                    .filter(img -> img.getIsPrimary() != null && img.getIsPrimary())
+                    .findFirst()
+                    .map(PlaceImage::getImageUrl)
+                    .orElse(images.get(0).getImageUrl());
+        }
+        return null;
+    }
 }

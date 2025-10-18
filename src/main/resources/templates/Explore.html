@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Destinations</title>
+    <link rel="stylesheet" th:href="@{/css/Explore.css}">
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<!-- Banner 1 -->
+<div class="banner" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');">
+    <div class="banner-overlay">
+        <h1>Explore</h1>
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Search destinations...">
+            <button id="search-btn">🔍</button>
+        </div>
+    </div>
+</div>
+
+<!-- Banner 2 -->
+<div class="banner" style="background-image: url('https://images.unsplash.com/photo-1526772662000-3f88f10405ff');">
+    <div class="banner-overlay">
+        <h1>Top Destinations</h1>
+        <p>Discover breathtaking spots loved by travelers</p>
+    </div>
+</div>
+
+<!-- Banner 3 -->
+<div class="banner" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470');">
+    <div class="banner-overlay">
+        <h1>Adventure Awaits</h1>
+        <p>Plan your next great outdoor escape</p>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="filters">
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="beach">Beaches</button>
+    <button data-filter="mountain">Mountains</button>
+    <button data-filter="city">Cities</button>
+    <button data-filter="adventure">Adventure</button>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loading" class="text-center py-5" style="display: none;">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <p>Loading destinations...</p>
+</div>
+
+<!-- No Results Message -->
+<div id="no-results" class="text-center py-5" style="display: none;">
+    <h4>No destinations found</h4>
+    <p class="text-muted">Try adjusting your search or filters</p>
+</div>
+
+<!-- Destination Cards -->
+<div class="destinations" id="destinations-container">
+    <!-- Cards will be dynamically loaded here -->
+</div>
+
+<!-- JavaScript -->
+<script th:src="@{/js/explore.js}"></script>
+</body>
+</html>

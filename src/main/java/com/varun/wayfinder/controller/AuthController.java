@@ -103,23 +103,6 @@ public class AuthController {
         }
     }
 
-//    // Dashboard - protected page
-//    @GetMapping("/profile")
-//    public String showProfile(@CookieValue(value = "token", defaultValue = "") String token,
-//                              Model model) {
-//        if (token.isEmpty() || jwtUtil.isTokenExpired(token)) {
-//            return "redirect:/";
-//        }
-//        String username = jwtUtil.extractUsername(token);
-//
-//        // fetch user from DB
-//        User user = userService.findByUsername(username);
-//
-//        // add it for Thymeleaf
-//        model.addAttribute("user", user);
-//        return "profile";
-//    }
-
     // Logout
     @PostMapping("/logout")
     public String logout(HttpServletResponse response) {
