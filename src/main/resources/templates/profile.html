@@ -16,7 +16,9 @@
         <li>Account Settings</li>
         <li>Update Password</li>
         <li>Help Center</li>
-        <li><a th:href="@{/logout}">Logout</a></li>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
     </ul>
 </div>
 
