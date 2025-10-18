@@ -8,128 +8,72 @@
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-text">
-            <h2>Explore the World</h2>
-            <p>Find the best places to travel and relax yourself. Discover amazing destinations and plan your perfect trip with WayFinder.</p>
-            <a class="btn" href="#">Start Your Journey</a>
-        </div>
-        <img src="https://i.pinimg.com/736x/c1/e9/32/c1e932c86aa09e38e89773bf66f2501b.jpg" alt="Beach">
-    </section>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <!-- Destinations -->
-    <h2 class="section-title">Discover the World</h2>
-    <div class="destinations">
-        <div class="destination-card" onclick="viewLocationDetails('Rome')">
-            <img src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad" alt="Rome">
-            <div class="content">
-                <p>Rome, Italy</p>
-                <div class="price-btn">
-                    <span>₹50000</span>
-                    <a href="#" onclick="event.stopPropagation(); viewLocationDetails('Rome')">View Details</a>
-                </div>
-            </div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-text">
+        <h2>Explore the World</h2>
+        <p>Find the best places to travel and relax yourself. Discover amazing destinations and plan your perfect trip with WayFinder.</p>
+        <a class="btn" href="/explore">Start Your Journey</a>
+    </div>
+    <img src="https://i.pinimg.com/736x/c1/e9/32/c1e932c86aa09e38e89773bf66f2501b.jpg" alt="Beach">
+</section>
+
+<!-- Destinations -->
+<h2 class="section-title">Discover the World</h2>
+
+<!-- Loading State -->
+<div id="places-loading" class="loading-state" style="display: none;">
+    <div class="spinner"></div>
+    <p>Loading featured destinations...</p>
+</div>
+
+<!-- Destinations Container -->
+<div class="destinations" id="featured-destinations">
+    <!-- Cards will be loaded dynamically -->
+</div>
+
+<!-- Features -->
+<div class="features">
+    <div class="feature-card">
+        <h4>Personalised Trips Planned</h4>
+        <p>Ensures smooth experience and matches user preferences.</p>
+    </div>
+    <div class="feature-card">
+        <h4>Reliable Tour</h4>
+        <p>Trusted tours with verified services and packages.</p>
+    </div>
+    <div class="feature-card">
+        <h4>Friendly Price</h4>
+        <p>Affordable travel plans for every kind of explorer.</p>
+    </div>
+</div>
+
+<!-- Testimonials -->
+<div class="testimonial-section">
+    <h2 class="section-title">Our Clients' Words</h2>
+    <div class="testimonial-cards">
+        <div class="testimonial-card">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Jenny Wilson">
+            <p>"Had an experience planning trip with WayFinder, trip was planned according to the preferences given."</p>
+            <strong>Jenny Wilson</strong><br>
+            <small>Traveler</small>
         </div>
-        <div class="destination-card" onclick="viewLocationDetails('Bali')">
-            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Bali">
-            <div class="content">
-                <p>Bali, Indonesia</p>
-                <div class="price-btn">
-                    <span>₹40000</span>
-                    <a href="#" onclick="event.stopPropagation(); viewLocationDetails('Bali')">View Details</a>
-                </div>
-            </div>
-        </div>
-        <div class="destination-card" onclick="viewLocationDetails('New York')">
-            <img src="https://images.unsplash.com/photo-1471623432079-b009d30b6729" alt="New York Central Park">
-            <div class="content">
-                <p>New York, USA</p>
-                <div class="price-btn">
-                    <span>₹60000</span>
-                    <a href="#" onclick="event.stopPropagation(); viewLocationDetails('New York')">View Details</a>
-                </div>
-            </div>
+        <div class="testimonial-card">
+            <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="John Doe">
+            <p>"Amazing experience with WayFinder. Planning my trip has never been easier!"</p>
+            <strong>John Doe</strong><br>
+            <small>Traveler</small>
         </div>
     </div>
+</div>
 
-    <!-- Features -->
-    <div class="features">
-        <div class="feature-card">
-            <h4>Personalised Trips Planned</h4>
-            <p>Ensures smooth experince and matches user preferences.</p>
-        </div>
-        <div class="feature-card">
-            <h4>Reliable Tour</h4>
-            <p>Trusted tours with verified services and packages.</p>
-        </div>
-        <div class="feature-card">
-            <h4>Friendly Price</h4>
-            <p>Affordable travel plans for every kind of explorer.</p>
-        </div>
-    </div>
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 WayFinder - All rights reserved.</p>
+</footer>
 
-    <!-- Testimonials -->
-    <div class="testimonial-section">
-        <h2 class="section-title">Our Clients' Words</h2>
-        <div class="testimonial-cards">
-            <div class="testimonial-card">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Jenny Wilson">
-                <p>"Had a experince planning trip with WayFinnder, trip was planned according to the preferences given."</p>
-                <strong>Jenny Wilson</strong><br>
-                <small>Traveler</small>
-            </div>
-            <div class="testimonial-card">
-                <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="John Doe">
-                <p>"Amazing experience with WayFinder. Planning my trip has never been easier!"</p>
-                <strong>John Doe</strong><br>
-                <small>Traveler</small>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 WayFinder - All rights reserved.</p>
-    </footer>
-
-    <script>
-        // Function to handle location card clicks
-        function viewLocationDetails(locationName) {
-          // Check if user is authenticated using localStorage
-          if (AuthManager.isAuthenticated()) {
-            // User is authenticated, navigate directly to location details
-            window.location.href = `/location-details.html?location=${encodeURIComponent(locationName)}`;
-          } else {
-            // User is not authenticated, store the intended destination and redirect to login
-            localStorage.setItem('redirectAfterLogin', `/location-details.html?location=${encodeURIComponent(locationName)}`);
-            window.location.href = 'SignIn.html';
-          }
-        }
-
-        // Add click handlers for navigation links
-        document.addEventListener('DOMContentLoaded', function() {
-          // Make navigation links work
-          const navLinks = document.querySelectorAll('header nav a');
-          navLinks.forEach(link => {
-            if (link.textContent.trim() === 'Home') {
-              link.href = '/';
-            } else if (link.textContent.trim() === 'Explore') {
-              link.href = '/explore';
-            } else if (link.textContent.trim() === 'My Trips') {
-              link.href = '/mytrips';
-            } else if (link.textContent.trim() === 'Profile') {
-              link.href = '/profile';
-            }
-          });
-
-          // Make hero button work
-          const heroBtn = document.querySelector('.hero .btn');
-          if (heroBtn) {
-            heroBtn.href = '/explore';
-          }
-        });
-    </script>
+<script th:src="@{/js/Home.js}"></script>
 </body>
 </html>

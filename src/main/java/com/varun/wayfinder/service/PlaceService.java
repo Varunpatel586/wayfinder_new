@@ -37,7 +37,6 @@ public class PlaceService {
 
     public List<PlaceDTO> getTopRatedPlaces() {
         return placeRepository.findTopRatedPlaces().stream()
-                .limit(10)
                 .map(PlaceDTO::new)
                 .collect(Collectors.toList());
     }
