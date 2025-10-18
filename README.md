@@ -95,6 +95,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## ✉️ Contact
 
-Varun Patel - [@your_twitter](https://twitter.com/your_twitter)
+LinkedIn - [Varun Patel](https://www.linkedin.com/in/varun-patel-16611631a/)
 
 Project Link: [https://github.com/Varunpatel586/wayfinder_new](https://github.com/Varunpatel586/wayfinder_new)
