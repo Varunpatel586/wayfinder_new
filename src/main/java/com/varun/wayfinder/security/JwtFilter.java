@@ -24,13 +24,26 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        // Allow access to static resources and auth pages without authentication
-        if (path.startsWith("/css/") || path.startsWith("/js/") || path.startsWith("/images/") ||
-                path.equals("/") || path.equals("/login") || path.equals("/register") || path.equals("/SignUp")) {
+
+        // Allow access to PUBLIC pages and resources without authentication
+        if (path.startsWith("/css/") ||
+                path.startsWith("/js/") ||
+                path.startsWith("/images/") ||
+                path.equals("/") ||
+                path.equals("/explore") ||
+                path.startsWith("/place/") ||
+                path.startsWith("/api/places") ||
+                path.startsWith("/api/featured-places") ||
+                path.startsWith("/api/generate-route") ||
+                path.equals("/login") ||
+                path.equals("/register") ||
+                path.equals("/SignUp")) {
+
             filterChain.doFilter(request, response);
             return;
         }
 
+        // For PROTECTED pages, check JWT token
         String token = null;
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -63,8 +76,12 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        // If we get here, the user is not authenticated
-        response.sendRedirect("/");
+        // If we get here, the user is not authenticated for a protected page
+        // Redirect to login with 'next' parameter to return after login
+        String redirectUrl = "/login";
+        if (!path.equals("/")) {
+            redirectUrl = "/login?next=" + path;
+        }
+        response.sendRedirect(redirectUrl);
     }
 }
-

@@ -1,221 +1,29 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-  }
+body {
+    font-family: 'Open Sans', sans-serif;
+    scroll-behavior: smooth;
+    background-color: #111827; /* Dark background for the whole page */
+}
 
-  body {
-    background-color: #f7fdf9;
-    color: #1b3a2a;
-    line-height: 1.6;
-  }
+.hero-title {
+    font-family: 'Lora', serif;
+}
 
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  header {
+.hero-section-bg {
+    background-image: url('https://wallpaperaccess.com/full/2602299.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 20px 50px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-
-  header h1 {
-    font-weight: 700;
-    font-size: 1.8rem;
-    color: #2d6a4f;
-  }
-
-  nav a {
-    margin: 0 15px;
-    font-weight: 500;
-    color: #2d6a4f;
-  }
-
-  nav a:hover {
-    color: #1b3a2a;
-  }
-
-  .btn {
-    background-color: #2d6a4f;
-    color: #fff;
-    padding: 10px 25px;
-    border-radius: 25px;
-    font-weight: 600;
-  }
-
-  .btn:hover {
-    background-color: #1b3a2a;
-  }
-
-  .hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 60px 50px;
-    flex-wrap: wrap;
-  }
-
-  .hero-text {
-    max-width: 600px;
-  }
-
-  .hero-text h2 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-  }
-
-  .hero-text p {
-    font-size: 1rem;
-    margin-bottom: 25px;
-  }
-
-  .hero img {
-    max-width: 500px;
-    border-radius: 15px;
-    margin-top: 20px;
-  }
-
-  .section-title {
-    text-align: center;
-    margin: 60px 0 40px;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #2d6a4f;
-  }
-
-  .destinations {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 0 50px 50px 50px;
-  }
-
-  .destination-card {
-    background-color: #ffffff;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.3s;
-  }
-
-  .destination-card:hover {
-    transform: translateY(-5px);
-  }
-
-  .destination-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  .destination-card .content {
-    padding: 15px;
-  }
-
-  .destination-card .content h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-  }
-
-  .destination-card .content p {
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-  }
-
-  .destination-card .price-btn {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .destination-card .price-btn span {
-    font-weight: 600;
-    color: #2d6a4f;
-  }
-
-  .destination-card .price-btn a {
-    background-color: #2d6a4f;
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 15px;
-    font-size: 0.9rem;
-  }
-
-  .features {
-    display: flex;
-    justify-content: space-around;
-    padding: 50px;
-    background-color: #e6f4ea;
-    text-align: center;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
-  .feature-card h4 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #2d6a4f;
-  }
-
-  .feature-card p {
-    font-size: 0.9rem;
-  }
-
-  .testimonial-section {
-    padding: 50px;
-    text-align: center;
-  }
-
-  .testimonial-cards {
-    display: flex;
     justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
+    position: relative;
+}
 
-  .testimonial-card {
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    max-width: 300px;
-  }
-
-  .testimonial-card img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-bottom: 10px;
-  }
-
-  footer {
-    background-color: #ffffff;
-    text-align: center;
-    padding: 25px;
-    margin-top: 50px;
-    box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
-  }
-
-  footer p {
-    font-size: 0.9rem;
-    color: #2d6a4f;
-  }
-
-  @media(max-width: 768px) {
-    .hero {
-      flex-direction: column;
-    }
-    .hero img {
-      max-width: 100%;
-    }
-  }
+.header-transparent {
+    background-color: transparent;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 50;
+}

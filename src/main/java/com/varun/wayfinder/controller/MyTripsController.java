@@ -5,8 +5,10 @@ import com.varun.wayfinder.model.User;
 import com.varun.wayfinder.service.TripService;
 import com.varun.wayfinder.service.UserService;
 import com.varun.wayfinder.security.JwtUtil;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +25,24 @@ public class MyTripsController {
     private JwtUtil jwtUtil;
 
     @GetMapping("/my-trips")
-    public String myTrips() {
-        return "mytrips";
+    public String myTrips(@CookieValue(value = "token", required = false) String token,
+                          Model model) {
+        // Check authentication
+        if (token == null || token.trim().isEmpty()) {
+            return "redirect:/login?redirect=/my-trips";
+        }
+
+        try {
+            String username = jwtUtil.extractUsername(token);
+            if (username == null || jwtUtil.isTokenExpired(token)) {
+                return "redirect:/login?redirect=/my-trips";
+            }
+            model.addAttribute("username", username);
+            model.addAttribute("isLoggedIn", true);
+            return "mytrips";
+        } catch (Exception e) {
+            return "redirect:/login?redirect=/my-trips";
+        }
     }
 
     @GetMapping("/api/my-trips")
@@ -55,13 +73,30 @@ public class MyTripsController {
         tripService.deleteTrip(id, user);
     }
 
-    // Utility: read token from header, validate, fetch user
     private User parseUserFromRequest(HttpServletRequest request) {
+        // First try header
         String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
-            throw new RuntimeException("Missing or invalid Authorization header");
+        String token = null;
+
+        if (header != null && header.startsWith("Bearer ")) {
+            token = header.substring(7);
+        } else {
+            // Try cookie if header not present
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("token".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
+                }
+            }
         }
-        String token = header.substring(7);
+
+        if (token == null) {
+            throw new RuntimeException("Missing authentication");
+        }
+
         String username = jwtUtil.extractUsername(token);
         if (jwtUtil.isTokenExpired(token)) {
             throw new RuntimeException("Token expired");
