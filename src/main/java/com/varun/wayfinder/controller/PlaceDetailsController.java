@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -31,14 +30,37 @@ public class PlaceDetailsController {
     @Autowired private UserService userService;
     @Autowired private JwtUtil jwtUtil;
 
-    // Public page - anyone can view
+    // Public page - anyone can view, but shows different UI based on login status
     @GetMapping("/place/{id}")
-    public String placeDetails(@PathVariable Long id, Model model) {
+    public String placeDetails(@PathVariable Long id,
+                               @CookieValue(value = "token", required = false) String token,
+                               Model model) {
         PlaceDTO place = placeService.getPlaceById(id);
         if (place == null) {
             return "redirect:/explore";
         }
+
+        // Check if user is logged in
+        boolean isLoggedIn = false;
+        String username = null;
+
+        if (token != null && !token.trim().isEmpty()) {
+            try {
+                if (!jwtUtil.isTokenExpired(token)) {
+                    username = jwtUtil.extractUsername(token);
+                    if (username != null) {
+                        isLoggedIn = true;
+                    }
+                }
+            } catch (Exception e) {
+                // Invalid token, but still show the page
+            }
+        }
+
         model.addAttribute("place", place);
+        model.addAttribute("username", username);
+        model.addAttribute("isLoggedIn", isLoggedIn);
+
         return "place-details";
     }
 

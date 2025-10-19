@@ -15,9 +15,11 @@ public class TripDTO {
     private String status;
     private String dateRange;
     private Long placeId;
+    private String notes;
 
+    // Updated constructor with notes parameter
     public TripDTO(Long id, String placeName, String imageUrl,
-                   LocalDate startDate, LocalDate endDate, String status, Long placeId) {
+                   LocalDate startDate, LocalDate endDate, String status, Long placeId, String notes) {
         this.id = id;
         this.tripName = placeName;
         this.placeName = placeName;
@@ -26,6 +28,7 @@ public class TripDTO {
         this.endDate = endDate;
         this.status = status;
         this.placeId = placeId;
+        this.notes = notes;
         this.dateRange = formatDateRange(startDate, endDate);
     }
 

@@ -3,16 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTrips();
 });
 
-// Get token from cookie
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-        return parts.pop().split(';').shift();
-    }
-    return null;
-}
-
 // Load trips from API
 async function loadTrips() {
     const container = document.getElementById('trip-container');
@@ -25,29 +15,20 @@ async function loadTrips() {
     noTripsMessage.style.display = 'none';
 
     try {
-        // Get token from cookie
-        const token = getCookie('token');
-
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-
-        // Add Authorization header if token exists
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-
         const response = await fetch('/api/my-trips', {
             method: 'GET',
-            headers: headers,
-            credentials: 'include'
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin' // Send HttpOnly cookie automatically
         });
 
         console.log('Response status:', response.status);
 
         if (!response.ok) {
             if (response.status === 401) {
-                window.location.href = '/login';
+                window.location.href = '/login?next=/my-trips';
                 return;
             }
             throw new Error('Failed to load trips');
@@ -98,27 +79,51 @@ function createTripCard(trip) {
     const statusClass = trip.status.toLowerCase();
     const statusLabel = trip.status === 'UPCOMING' ? 'Upcoming' : 'Completed';
 
-    // DEBUG: Log what we're creating
+    // ✅ Format notes section
+    let notesHtml = '';
+    if (trip.notes && trip.notes.trim() !== '') {
+        const maxPreviewLength = 150;
+        const truncatedNotes = trip.notes.length > maxPreviewLength
+            ? trip.notes.substring(0, maxPreviewLength) + '...'
+            : trip.notes;
+
+        notesHtml = `
+            <div class="trip-notes">
+                <h4>📝 Itinerary</h4>
+                <div class="notes-preview">
+                    <pre>${escapeHtml(truncatedNotes)}</pre>
+                </div>
+                ${trip.notes.length > maxPreviewLength
+                    ? `<button class="btn-view-notes" data-trip-id="${trip.id}" data-place-name="${escapeHtml(trip.placeName)}" data-notes="${escapeHtml(trip.notes)}">View Full Itinerary</button>`
+                    : ''}
+            </div>
+        `;
+    }
+
     console.log('Creating card for:', trip.placeName, 'PlaceID:', trip.placeId, 'TripID:', trip.id);
 
     card.innerHTML = `
         <div class="trip-card-header">
-            <span class="trip-name">${trip.placeName}</span>
+            <span class="trip-name">${escapeHtml(trip.placeName)}</span>
             <span class="status ${statusClass}">${statusLabel}</span>
         </div>
         <img src="${trip.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}"
-             alt="${trip.placeName}"
+             alt="${escapeHtml(trip.placeName)}"
              onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
         <div class="trip-dates">${trip.dateRange}</div>
+
+        ${notesHtml}
+
         <div class="trip-buttons">
-            <button class="view-btn" data-place-id="${trip.placeId}" data-trip-id="${trip.id}">View Place</button>
+            <button class="view-btn" data-place-id="${trip.placeId}">View Place</button>
             <button class="edit-btn" data-trip-id="${trip.id}">Delete Trip</button>
         </div>
     `;
 
-    // Add event listeners using data attributes (cleaner approach)
+    // Add event listeners
     const viewBtn = card.querySelector('.view-btn');
     const deleteBtn = card.querySelector('.edit-btn');
+    const viewNotesBtn = card.querySelector('.btn-view-notes');
 
     viewBtn.addEventListener('click', function() {
         const placeId = this.getAttribute('data-place-id');
@@ -135,6 +140,15 @@ function createTripCard(trip) {
         deleteTrip(tripId);
     });
 
+    if (viewNotesBtn) {
+        viewNotesBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const placeName = this.getAttribute('data-place-name');
+            const notes = this.getAttribute('data-notes');
+            showNotesModal(placeName, notes);
+        });
+    }
+
     return card;
 }
 
@@ -145,20 +159,13 @@ async function deleteTrip(tripId) {
     }
 
     try {
-        const token = getCookie('token');
-
-        const headers = {
-            'Content-Type': 'application/json'
-        };
-
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-
         const response = await fetch(`/api/my-trips/${tripId}`, {
             method: 'DELETE',
-            headers: headers,
-            credentials: 'include'
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
         });
 
         if (response.ok) {
@@ -171,4 +178,55 @@ async function deleteTrip(tripId) {
         console.error('Error deleting trip:', error);
         alert('An error occurred while deleting the trip.');
     }
+}
+
+// Show notes in modal
+function showNotesModal(placeName, notes) {
+    // Remove any existing modal
+    const existingModal = document.querySelector('.notes-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'notes-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Itinerary: ${escapeHtml(placeName)}</h2>
+                <button class="modal-close" onclick="this.closest('.notes-modal').remove()">×</button>
+            </div>
+            <div class="modal-body">
+                <pre>${escapeHtml(notes)}</pre>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="this.closest('.notes-modal').remove()">Close</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function closeOnEscape(e) {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    });
+}
+
+// Utility: Escape HTML to prevent XSS
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }

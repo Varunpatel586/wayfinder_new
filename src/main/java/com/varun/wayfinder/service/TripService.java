@@ -79,7 +79,8 @@ public class TripService {
                 trip.getStartDate(),
                 trip.getEndDate(),
                 trip.getStatus().toString(),
-                place.getId()
+                place.getId(),
+                trip.getNotes()
         );
     }
 

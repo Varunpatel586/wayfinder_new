@@ -1,23 +1,5 @@
 // ========== UTILITY FUNCTIONS ==========
 
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-        return parts.pop().split(';').shift();
-    }
-    return null;
-}
-
-function getAllCookies() {
-    const cookies = {};
-    document.cookie.split(';').forEach(cookie => {
-        const [name, value] = cookie.trim().split('=');
-        if (name) cookies[name] = value;
-    });
-    return cookies;
-}
-
 function showMessage(message, type) {
     const messageDiv = document.getElementById('trip-message');
     if (!messageDiv) return;
@@ -91,6 +73,7 @@ async function generateRoute() {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify({
                 placeId: placeId,
                 days: parseInt(days)
@@ -137,16 +120,19 @@ function addSaveItineraryButton(itinerary) {
     }
 }
 
-async function saveItineraryToTrip(itinerary) {
+function saveItineraryToTrip(itinerary) {
     // Pre-fill the notes with the generated itinerary
     const notesField = document.getElementById('trip-notes');
     if (notesField) {
         notesField.value = 'Generated Itinerary:\n\n' + itinerary;
         // Scroll to the add trip form
-        document.querySelector('.add-trip-card').scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-        });
+        const addTripCard = document.querySelector('.add-trip-card');
+        if (addTripCard) {
+            addTripCard.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
         showMessage('Itinerary copied to notes. Please select dates and save your trip.', 'info');
     }
 }
@@ -154,30 +140,18 @@ async function saveItineraryToTrip(itinerary) {
 async function handleAddTrip(e) {
     e.preventDefault();
 
-    // For non-logged in users (shouldn't happen as form is hidden, but just in case)
-    if (!isLoggedIn) {
-        window.location.href = `/login?redirect=/place/${placeId}`;
-        return;
-    }
-
     const startDate = document.getElementById('start-date').value;
     const endDate = document.getElementById('end-date').value;
     const notes = document.getElementById('trip-notes').value;
 
     // Validate dates
-    if (new Date(endDate) < new Date(startDate)) {
-        showMessage('End date must be after start date', 'error');
+    if (!startDate || !endDate) {
+        showMessage('Please select both start and end dates', 'error');
         return;
     }
 
-    // Get token from cookie
-    const token = getCookie('token');
-
-    if (!token) {
-        showMessage('Session expired. Please login again.', 'error');
-        setTimeout(() => {
-            window.location.href = `/login?redirect=/place/${placeId}`;
-        }, 2000);
+    if (new Date(endDate) < new Date(startDate)) {
+        showMessage('End date must be after start date', 'error');
         return;
     }
 
@@ -192,8 +166,9 @@ async function handleAddTrip(e) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'X-Requested-With': 'XMLHttpRequest'
             },
+            credentials: 'same-origin', // Send cookies automatically
             body: JSON.stringify({
                 placeId: placeId,
                 startDate: startDate,
@@ -202,14 +177,18 @@ async function handleAddTrip(e) {
             })
         });
 
-        const data = await response.json();
-
-        if (data.requireLogin) {
+        // Handle 401 - redirect to login
+        if (response.status === 401) {
             showMessage('Please login to add trips', 'error');
             setTimeout(() => {
-                window.location.href = `/login?redirect=/place/${placeId}`;
+                window.location.href = `/login?next=/place/${placeId}`;
             }, 1500);
-        } else if (data.success) {
+            return;
+        }
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
             showMessage('Trip added successfully! Redirecting to My Trips...', 'success');
             document.getElementById('add-trip-form').reset();
             setMinDates(); // Reset date fields
@@ -261,7 +240,7 @@ function setupEventListeners() {
         btn.addEventListener('click', function(e) {
             if (!this.href) {
                 e.preventDefault();
-                window.location.href = `/login?redirect=/place/${placeId}`;
+                window.location.href = `/login?next=/place/${placeId}`;
             }
         });
     });
@@ -376,9 +355,5 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Page loaded');
     console.log('User logged in:', isLoggedIn);
     console.log('Place ID:', placeId);
-
-    if (isLoggedIn) {
-        const token = getCookie('token');
-        console.log('Token exists:', !!token);
-    }
+    console.log('HttpOnly cookie will be sent automatically with requests');
 });
