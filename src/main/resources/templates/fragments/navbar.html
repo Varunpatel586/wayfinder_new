@@ -4,23 +4,41 @@
     <link rel="stylesheet" th:href="@{/css/navbar.css}">
 </head>
 <body>
-<header th:fragment="navbar">
-    <h1>WayFinder</h1>
-    <nav>
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/explore}">Explore</a>
-        <a th:href="@{/my-trips}">My Trips</a>
+<header th:fragment="navbar" class="header-transparent">
+    <nav class="navbar-container">
 
-        <a th:if="${username != null}"
-           th:href="@{/profile}"
-           th:text="Profile">Profile</a>
+        <!-- Left: Home + Explore -->
+        <div class="nav-left">
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/explore}">Explore</a>
+        </div>
 
-        <a th:if="${username == null}"
-           th:href="@{/login}">Login</a>
+        <!-- Center: Location Icon -->
+        <div class="nav-center">
+            <a th:href="@{/}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#ffffff" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13
+                             c0-3.87-3.13-7-7-7zm0 9.5
+                             c-1.38 0-2.5-1.12-2.5-2.5
+                             S10.62 6.5 12 6.5
+                             s2.5 1.12 2.5 2.5
+                             -1.12 2.5-2.5 2.5z"/>
+                </svg>
+            </a>
+        </div>
 
-        <a th:if="${username == null}"
-           class="btn"
-           th:href="@{/start}">Start Your Journey</a>
+        <!-- Right: My Trips + Profile/Login -->
+        <div class="nav-right">
+            <!-- My Trips: redirect to login if not logged in -->
+            <a th:if="${username != null}" th:href="@{/my-trips}">My Trips</a>
+            <a th:if="${username == null}" th:href="@{/login(next='/my-trips')}">My Trips</a>
+
+            <!-- Show Profile if logged in -->
+            <a th:if="${username != null}" th:href="@{/profile}">Profile</a>
+
+            <!-- Show Login if not logged in -->
+            <a th:if="${username == null}" th:href="@{/login}">Login</a>
+        </div>
     </nav>
 </header>
 </body>

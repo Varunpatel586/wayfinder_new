@@ -1,4 +1,4 @@
-/* General Reset */
+/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -17,55 +17,118 @@ a {
     color: inherit;
 }
 
-/* Navbar Container */
-header {
+/* Transparent Header */
+header.header-transparent {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999; /* ✅ Increased to ensure it's always on top */
+    background: rgba(45, 106, 79, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto; /* ✅ Ensure header can receive clicks */
+}
+
+/* Navbar Layout */
+.navbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 50px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    width: 90%;
+    max-width: 1200px;
+    pointer-events: auto; /* ✅ Ensure navbar can receive clicks */
 }
 
-/* Brand Title */
-header h1 {
-    font-weight: 700;
-    font-size: 1.8rem;
-    color: #2d6a4f;
+/* Sections */
+.nav-left,
+.nav-center,
+.nav-right {
+    display: flex;
+    align-items: center;
+    pointer-events: auto; /* ✅ Ensure sections can receive clicks */
+}
+
+.nav-left {
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.nav-right {
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.nav-center {
+    margin: 0 30px;
 }
 
 /* Nav Links */
-nav {
-    display: flex;
-    align-items: center;
-}
-
 nav a {
-    margin: 0 15px;
+    margin: 0 18px;
     font-weight: 500;
-    color: #2d6a4f;
-    transition: color 0.2s ease-in-out;
+    color: #ffffff;
+    font-size: 1.5rem;
+    letter-spacing: 0.05rem;
+    transition: color 0.3s ease-in-out;
+    cursor: pointer; /* ✅ Ensure cursor shows it's clickable */
+    pointer-events: auto; /* ✅ Critical: ensure links can receive clicks */
+    position: relative; /* ✅ Ensure links are in the stacking context */
+    z-index: 10; /* ✅ Put links above any potential overlays */
 }
 
 nav a:hover {
-    color: #1b3a2a;
+    color: #d1fae5;
 }
 
-/* Button Style */
-.btn, nav form button.btn {
-    background-color: #2d6a4f;
-    color: #fff;
+/* Button */
+.btn {
+    background-color: #ffffff;
+    color: #2d6a4f;
     padding: 8px 22px;
     border-radius: 25px;
     font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer; /* ✅ Ensure cursor shows it's clickable */
 }
 
-.btn:hover, nav form button.btn:hover {
-    background-color: #1b3a2a;
+.btn:hover {
+    background-color: #d1fae5;
+    color: #1b3a2a;
+}
+
+/* SVG Center Icon Hover */
+.nav-center a:hover svg {
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.nav-center svg {
+    pointer-events: auto; /* ✅ Ensure SVG can receive clicks */
+}
+
+/* Optional: Shadow under navbar when scrolling */
+header.header-transparent.scrolled {
+    background: rgba(45, 106, 79, 0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: background 0.3s ease-in-out;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+    text-decoration: none;
+    pointer-events: auto; /* ✅ Ensure button can receive clicks */
+}
+
+.logout-btn:hover {
+    opacity: 0.8;
 }

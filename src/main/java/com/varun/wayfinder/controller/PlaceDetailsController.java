@@ -8,11 +8,15 @@ import com.varun.wayfinder.service.GeminiService;
 import com.varun.wayfinder.service.PlaceService;
 import com.varun.wayfinder.service.TripService;
 import com.varun.wayfinder.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -21,21 +25,13 @@ import java.util.Map;
 @Controller
 public class PlaceDetailsController {
 
-    @Autowired
-    private PlaceService placeService;
+    @Autowired private PlaceService placeService;
+    @Autowired private GeminiService geminiService;
+    @Autowired private TripService tripService;
+    @Autowired private UserService userService;
+    @Autowired private JwtUtil jwtUtil;
 
-    @Autowired
-    private GeminiService geminiService;
-
-    @Autowired
-    private TripService tripService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
+    // Public page - anyone can view
     @GetMapping("/place/{id}")
     public String placeDetails(@PathVariable Long id, Model model) {
         PlaceDTO place = placeService.getPlaceById(id);
@@ -46,6 +42,7 @@ public class PlaceDetailsController {
         return "place-details";
     }
 
+    // Public API - anyone can generate itinerary
     @PostMapping("/api/generate-route")
     @ResponseBody
     public Map<String, String> generateRoute(@RequestBody Map<String, Object> request) {
@@ -53,6 +50,9 @@ public class PlaceDetailsController {
         int days = Integer.parseInt(request.get("days").toString());
 
         PlaceDTO place = placeService.getPlaceById(placeId);
+        if (place == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
+        }
 
         String itinerary = geminiService.generateTravelRoute(
                 place.getName(),
@@ -61,16 +61,15 @@ public class PlaceDetailsController {
                 days
         );
 
-        Map<String, String> response = new HashMap<>();
-        response.put("itinerary", itinerary);
-        return response;
+        return Map.of("itinerary", itinerary);
     }
 
+    // Protected API - requires login
     @PostMapping("/api/add-to-trips")
     @ResponseBody
-    public Map<String, Object> addToTrips(@RequestBody Map<String, Object> request,
-                                          HttpServletRequest httpRequest) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> addToTrips(
+            @RequestBody Map<String, Object> request,
+            HttpServletRequest httpRequest) {
 
         try {
             User user = parseUserFromRequest(httpRequest);
@@ -80,50 +79,77 @@ public class PlaceDetailsController {
             LocalDate endDate = LocalDate.parse(request.get("endDate").toString());
             String notes = request.get("notes") != null ? request.get("notes").toString() : "";
 
+            if (endDate.isBefore(startDate)) {
+                return ResponseEntity.badRequest().body(Map.of(
+                        "success", false,
+                        "message", "End date cannot be before start date"
+                ));
+            }
+
             Trip trip = tripService.createTrip(user, placeId, startDate, endDate, notes);
 
-            response.put("success", true);
-            response.put("message", "Trip added successfully!");
-            response.put("tripId", trip.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                    "success", true,
+                    "message", "Trip added successfully!",
+                    "tripId", trip.getId()
+            ));
 
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of(
+                    "success", false,
+                    "message", e.getReason()
+            ));
         } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "success", false,
+                    "message", "An error occurred"
+            ));
         }
-
-        return response;
     }
 
     private User parseUserFromRequest(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
-            // Try cookie fallback
-            jakarta.servlet.http.Cookie[] cookies = request.getCookies();
+        String token = null;
+
+        // 1. Try Authorization header
+        String auth = request.getHeader("Authorization");
+        if (auth != null && auth.startsWith("Bearer ")) {
+            token = auth.substring(7);
+        }
+
+        // 2. Fallback to cookie
+        if (token == null || token.isBlank()) {
+            Cookie[] cookies = request.getCookies();
             if (cookies != null) {
-                for (jakarta.servlet.http.Cookie cookie : cookies) {
+                for (Cookie cookie : cookies) {
                     if ("token".equals(cookie.getName())) {
-                        header = "Bearer " + cookie.getValue();
+                        token = cookie.getValue();
                         break;
                     }
                 }
             }
         }
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            throw new RuntimeException("Missing or invalid Authorization");
+        // 3. Validate
+        if (token == null || token.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login required");
         }
 
-        String token = header.substring(7);
-        String username = jwtUtil.extractUsername(token);
+        try {
+            if (jwtUtil.isTokenExpired(token)) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token expired");
+            }
 
-        if (jwtUtil.isTokenExpired(token)) {
-            throw new RuntimeException("Token expired");
-        }
+            String username = jwtUtil.extractUsername(token);
+            User user = userService.findByUsername(username);
+            if (user == null) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found");
+            }
+            return user;
 
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            throw new RuntimeException("User not found");
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
-        return user;
     }
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ProfileController {
@@ -23,17 +24,20 @@ public class ProfileController {
     @GetMapping("/profile")
     public String showProfile(@CookieValue(value = "token", defaultValue = "") String token,
                               Model model) {
+        // Check authentication - redirect to login if not authenticated
         if (token.isEmpty() || jwtUtil.isTokenExpired(token)) {
-            return "redirect:/";
+            return "redirect:/login?redirect=/profile";
         }
 
         String username = jwtUtil.extractUsername(token);
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            return "redirect:/"; // unexpected: token user not in DB
+            return "redirect:/login?redirect=/profile";
         }
 
         model.addAttribute("user", user);
+        model.addAttribute("username", username);
+        model.addAttribute("isLoggedIn", true);
         return "profile";
     }
 
@@ -41,9 +45,11 @@ public class ProfileController {
     @PostMapping("/profile/update")
     public String updateProfile(@CookieValue(value = "token", defaultValue = "") String token,
                                 @ModelAttribute("user") User updatedUser,
+                                RedirectAttributes redirectAttributes,
                                 Model model) {
+        // Check authentication
         if (token.isEmpty() || jwtUtil.isTokenExpired(token)) {
-            return "redirect:/";
+            return "redirect:/login?redirect=/profile";
         }
 
         String username = jwtUtil.extractUsername(token);
@@ -55,6 +61,10 @@ public class ProfileController {
             existing.setCountry(updatedUser.getCountry());
             existing.setZipCode(updatedUser.getZipCode());
             userRepository.save(existing);
+
+            redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "User not found");
         }
 
         return "redirect:/profile";

@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            <!-- AI Route Generator -->
+            <!-- AI Route Generator - Available to all users -->
             <div class="route-generator-card">
                 <h2>🤖 AI Travel Planner</h2>
                 <p>Generate a personalized itinerary using AI</p>
@@ -68,13 +68,22 @@
                 <div id="route-result" class="route-result" style="display: none;">
                     <h3>Your Personalized Itinerary</h3>
                     <div id="itinerary-content"></div>
+
+                    <!-- Add save prompt for non-logged in users -->
+                    <div th:unless="${isLoggedIn}" class="save-prompt">
+                        <p>Want to save this itinerary?</p>
+                        <a th:href="@{/login(redirect='/place/' + ${place.id})}" class="btn btn-outline">
+                            Login to Save
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Add to Trip -->
+        <!-- Right Column: Add to Trip or Login Prompt -->
         <div class="sidebar-column">
-            <div class="add-trip-card">
+            <!-- Show Add Trip Form for Logged In Users -->
+            <div th:if="${isLoggedIn}" class="add-trip-card">
                 <h3>Plan Your Trip</h3>
 
                 <form id="add-trip-form">
@@ -103,7 +112,28 @@
                 <div id="trip-message" class="message" style="display: none;"></div>
             </div>
 
-            <!-- Quick Info -->
+            <!-- Show Login Prompt for Non-Logged In Users -->
+            <div th:unless="${isLoggedIn}" class="login-prompt-card">
+                <h3>Save Your Trip</h3>
+                <div class="login-benefits">
+                    <p>Login to unlock:</p>
+                    <ul>
+                        <li>✓ Save trips to your account</li>
+                        <li>✓ Access your travel history</li>
+                        <li>✓ Get personalized recommendations</li>
+                        <li>✓ Manage your itineraries</li>
+                    </ul>
+                </div>
+                <a th:href="@{/login(redirect='/place/' + ${place.id})}" class="btn btn-primary btn-block">
+                    Login to Plan Trip
+                </a>
+                <p class="signup-text">
+                    New to WayFinder?
+                    <a th:href="@{/SignUp}" class="signup-link">Create an account</a>
+                </p>
+            </div>
+
+            <!-- Quick Info - Always Visible -->
             <div class="quick-info-card">
                 <h3>Quick Info</h3>
                 <ul>
@@ -132,6 +162,7 @@
 <script th:inline="javascript">
     const placeId = /*[[${place.id}]]*/ 1;
     const placeName = /*[[${place.name}]]*/ 'Place';
+    const isLoggedIn = /*[[${isLoggedIn}]]*/ false;
 </script>
 <script th:src="@{/js/place-details.js}"></script>
 </body>

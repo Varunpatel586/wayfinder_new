@@ -306,3 +306,80 @@ h1 {
         padding: 0.25rem 0.5rem;
     }
 }
+/* Login Prompt Card Styles */
+.login-prompt-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.login-prompt-card h3 {
+    color: #333;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+}
+
+.login-benefits {
+    margin-bottom: 20px;
+}
+
+.login-benefits p {
+    color: #666;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.login-benefits ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.login-benefits li {
+    color: #555;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.login-benefits li:last-child {
+    border-bottom: none;
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.signup-text {
+    text-align: center;
+    margin-top: 16px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.signup-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+/* Save Prompt in Route Result */
+.save-prompt {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.save-prompt p {
+    margin-bottom: 12px;
+    color: #666;
+}
