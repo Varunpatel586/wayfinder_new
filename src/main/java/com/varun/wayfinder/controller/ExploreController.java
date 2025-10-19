@@ -21,39 +21,35 @@ public class ExploreController {
     @Autowired
     private JwtUtil jwtUtil;
 
-//    @GetMapping("/explore")
-//    public String explore(@CookieValue(value = "token", required = false) String token,
-//                          Model model,
-//                          HttpServletRequest request,
-//                          HttpServletResponse response) {
-//
-//        System.out.println("=== EXPLORE CONTROLLER CALLED ===");
-//        System.out.println("Request URI: " + request.getRequestURI());
-//        System.out.println("Token: " + token);
-//        System.out.println("Response committed: " + response.isCommitted());
-//
-//        String username = null;
-//        if (token != null && !token.trim().isEmpty()) {
-//            try {
-//                if (!jwtUtil.isTokenExpired(token)) {
-//                    username = jwtUtil.extractUsername(token);
-//                }
-//            } catch (Exception e) {
-//                // Invalid token, ignore
-//            }
-//        }
-//
-//        System.out.println("Username: " + username);
-//        System.out.println("About to return 'explore' template");
-//
-//        model.addAttribute("username", username);
-//        return "explore";
-//    }
-
     @GetMapping("/explore")
-    public String explore() {
+    public String explore(@CookieValue(value = "token", required = false) String token,
+                          Model model,
+                          HttpServletRequest request,
+                          HttpServletResponse response) {
+
+        System.out.println("=== EXPLORE CONTROLLER CALLED ===");
+        System.out.println("Request URI: " + request.getRequestURI());
+        System.out.println("Token: " + token);
+        System.out.println("Response committed: " + response.isCommitted());
+
+        String username = null;
+        if (token != null && !token.trim().isEmpty()) {
+            try {
+                if (!jwtUtil.isTokenExpired(token)) {
+                    username = jwtUtil.extractUsername(token);
+                }
+            } catch (Exception e) {
+                // Invalid token, ignore
+            }
+        }
+
+        System.out.println("Username: " + username);
+        System.out.println("About to return 'explore' template");
+
+        model.addAttribute("username", username);
         return "explore";
     }
+    
 
     @GetMapping("/api/places")
     @ResponseBody
