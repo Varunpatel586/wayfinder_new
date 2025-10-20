@@ -105,13 +105,19 @@ public class AuthController {
         return "SignUp";
     }
 
-    @PostMapping("/SignUp")
-    public String register(@RequestParam String username,
+    // SIGNUP
+    @PostMapping("/register")
+    public String register(@RequestParam String name,
+                           @RequestParam String email,
                            @RequestParam String password,
                            HttpServletResponse response,
                            RedirectAttributes redirectAttributes,
                            Model model) {
-        if (userService.registerUser(username, password)) {
+
+        // Use name as username
+        String username = name;
+
+        if (userService.registerUser(username, password, name, email)) {
             String token = jwtUtil.generateToken(username);
 
             Cookie cookie = new Cookie("token", token);
@@ -121,11 +127,12 @@ public class AuthController {
             response.addCookie(cookie);
 
             redirectAttributes.addFlashAttribute("message",
-                    "Registration successful! Welcome, " + username + "!");
+                    "Registration successful! Welcome, " + name + "!");
             return "redirect:/";
         } else {
-            model.addAttribute("error", "Username already exists!");
-            return "SignUp";
+            // Use redirectAttributes to pass the error message
+            redirectAttributes.addFlashAttribute("error", "Username or email already exists!");
+            return "redirect:/SignUp"; // Redirect back to signup page
         }
     }
 

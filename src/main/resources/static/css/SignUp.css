@@ -1,121 +1,90 @@
-* {
+body {
+    font-family: 'Open Sans', sans-serif;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-  }
+    overflow: hidden; /* Prevent scrollbar if pseudo-element causes it */
+    position: relative;
+    min-height: 100vh; /* Ensure body covers full viewport for pseudo-element */
+}
+/* Pseudo-element for the blurred background */
+body::before {
+    content: '';
+    position: fixed; /* Fixed position to cover entire viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://wallpaperaccess.com/full/2602299.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px); /* Apply blur here */
+    z-index: -1; /* Place it behind everything else */
+}
 
-  body {
-    background: #f7f7f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+.hero-title {
+    font-family: 'Lora', serif;
+}
 
-  .card {
-    background: #fff;
-    width: 320px;
-    padding: 30px 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    text-align: center;
-  }
-
-  .logo {
-    width: 60px;
-    height: 60px;
-    border: 2px solid green;
-    color: green;
-    font-size: 28px;
-    font-weight: bold;
-    border-radius: 12px;
+/* Main container to center the form card - now sits above the blurred background */
+.form-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 20px auto;
-    font-family: cursive;
-  }
+    min-height: 100vh; /* Ensures it covers full viewport height */
+    padding: 2rem;
+    background-color: rgba(17, 24, 39, 0.6); /* Overlay for readability, on top of blurred background */
+    z-index: 1; /* Ensure form-container is above the pseudo-element */
+    position: relative; /* Needed for z-index to work correctly */
+}
 
-  h2 {
-    font-size: 20px;
-    margin-bottom: 25px;
-  }
-
-  .form-group {
-    text-align: left;
-    margin-bottom: 15px;
-  }
-
-  .form-group label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-
-  .form-group input {
+/* The glass-like form card */
+.form-card {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-  }
+    max-width: 380px;
+    padding: 2rem;
+    background-color: rgba(31, 41, 55, 0.5); /* Semi-transparent dark background */
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
 
-  .btn {
+/* Styling for input fields */
+.form-input {
     width: 100%;
-    padding: 12px;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(17, 24, 39, 0.5); /* Darker transparent background */
+    color: #f3f4f6; /* Light gray text */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input::placeholder {
+    color: #6b7280; /* Gray placeholder text */
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #34d399; /* Emerald green border on focus */
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.3);
+}
+
+/* Styling for the submit button */
+.submit-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-
-  .btn-green {
-    background: #2ecc71;
+    background-color: #10b981; /* Emerald green */
     color: white;
-  }
-
-  .divider {
-    margin: 20px 0;
-    font-size: 14px;
-    color: #777;
-  }
-
-  .socials {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 15px;
-  }
-
-  .socials button {
-    width: 60px;
-    height: 40px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
+    font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
 
-  .socials img {
-    width: 20px;
-    height: 20px;
-  }
+.submit-button:hover {
+    background-color: #059669; /* Darker emerald on hover */
+    transform: translateY(-2px);
+}
 
-  .signin {
-    font-size: 14px;
-    color: #555;
-  }
-
-  .signin a {
-    color: #2ecc71;
-    font-weight: bold;
-    text-decoration: none;
-    margin-left: 4px;
-  }

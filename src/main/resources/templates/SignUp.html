@@ -1,39 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WayFinder - Sign Up</title>
-    <link rel="stylesheet" th:href="@{/css/SignUp.css}">
+    <title>Sign Up - WayFinder</title>
+
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Link to your external CSS file -->
+    <link rel="stylesheet" th:href="@{/css/Signup.css}">
+
 </head>
 <body>
-<div class="card">
-    <div class="logo">W</div>
-    <h2>Create your account</h2>
-    <form th:action="@{/SignUp}" method="post">
-        <div class="form-group">
-            <label>Username</label>
-            <input type="text" name="username" placeholder="Choose a username" required>
-        </div>
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Create a password" required>
-        </div>
-        <button type="submit" class="btn btn-green">SIGN UP</button>
-        <div class="error-message" th:if="${error}" style="color: red; margin-top: 10px;" th:text="${error}"></div>
-        <div class="success-message" th:if="${message}" style="color: green; margin-top: 10px;" th:text="${message}"></div>
-    </form>
 
-    <div class="divider">or sign up with</div>
-    <div class="socials">
-        <button type="button"><img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="Google"></button>
-        <button type="button"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></button>
-        <button type="button"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"></button>
-    </div>
+<div class="form-container">
+    <div class="form-card">
+        <!-- Form Header -->
+        <div class="text-center mb-6">
+            <a th:href="@{/}" class="hero-title text-3xl font-bold text-white">WayFinder</a>
+            <p class="text-gray-400 mt-2">Create your account to start planning.</p>
+        </div>
 
-    <div class="signin">
-        Already have an account? <a th:href="@{/}">SIGN IN</a>
+        <!-- Sign-Up Form -->
+        <form th:action="@{/register}" method="post">
+            <!-- Name Input -->
+            <div class="mb-4">
+                <label for="name" class="block text-gray-400 text-sm font-medium mb-2">Full Name</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="Enter your Username" required>
+            </div>
+            <!-- Email Input -->
+            <div class="mb-4">
+                <label for="email" class="block text-gray-400 text-sm font-medium mb-2">Email</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required>
+            </div>
+            <!-- Password Input -->
+            <div class="mb-4">
+                <label for="password" class="block text-gray-400 text-sm font-medium mb-2">Password</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-4">
+                <button type="submit" class="submit-button">
+                    Create Account
+                </button>
+            </div>
+        </form>
+
+        <!-- Login Link -->
+        <div class="text-center">
+            <p class="text-gray-400 text-sm">
+                Already have an account?
+                <a th:href="@{/login}" class="font-medium text-emerald-400 hover:text-emerald-300">
+                    Login here
+                </a>
+            </p>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
+

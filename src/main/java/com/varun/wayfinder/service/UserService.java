@@ -11,11 +11,33 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    // Original method for backward compatibility
     public boolean registerUser(String username, String password) {
         if (userRepository.findByUsername(username) != null) {
             return false; // username already exists
         }
         User user = new User(username, password);
+        userRepository.save(user);
+        return true;
+    }
+
+    // New method to handle additional fields
+    public boolean registerUser(String username, String password, String fullName, String email) {
+        if (userRepository.findByUsername(username) != null) {
+            return false; // username already exists
+        }
+
+        // Check if email already exists
+        if (userRepository.findByEmail(email) != null) {
+            return false; // email already exists
+        }
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password); // In production, encode this!
+        user.setFullName(fullName);
+        user.setEmail(email);
+
         userRepository.save(user);
         return true;
     }
