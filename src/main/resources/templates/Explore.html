@@ -10,32 +10,48 @@
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<!-- Banner 1 -->
-<div class="banner" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');">
-    <div class="banner-overlay">
-        <h1>Explore</h1>
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Search destinations...">
-            <button id="search-btn">🔍</button>
+<!-- Sliding Carousel Banner with search bar -->
+<div class="carousel-container">
+    <div class="carousel-slide active">
+        <img class="carousel-img" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Beach"/>
+        <div class="banner-overlay">
+            <div class="banner-title">WayFinder</div>
+            <div class="banner-subtitle">Your perfect trip, crafted by AI.</div>
+            <form class="banner-search-box" autocomplete="off">
+                <input type="text" placeholder="Search destinations..." id="banner-search-input">
+                <button type="submit">🔍</button>
+            </form>
         </div>
     </div>
-</div>
-
-<!-- Banner 2 -->
-<div class="banner" style="background-image: url('https://images.unsplash.com/photo-1526772662000-3f88f10405ff');">
-    <div class="banner-overlay">
-        <h1>Top Destinations</h1>
-        <p>Discover breathtaking spots loved by travelers</p>
+    <div class="carousel-slide">
+        <img class="carousel-img" src="https://images.unsplash.com/photo-1469474968028-56623f02e42e" alt="Maldives"/>
+        <div class="banner-overlay">
+            <div class="banner-title">Discover Paradise</div>
+            <div class="banner-subtitle">Find scenic beaches at your fingertips.</div>
+            <form class="banner-search-box" autocomplete="off">
+                <input type="text" placeholder="Search destinations...">
+                <button type="submit">🔍</button>
+            </form>
+        </div>
+    </div>
+    <div class="carousel-slide">
+        <img class="carousel-img" src="https://images.unsplash.com/photo-1501785888041-af3ef285b470" alt="Alps"/>
+        <div class="banner-overlay">
+            <div class="banner-title">Adventure Awaits</div>
+            <div class="banner-subtitle">Plan your next outdoor escape.</div>
+            <form class="banner-search-box" autocomplete="off">
+                <input type="text" placeholder="Search destinations...">
+                <button type="submit">🔍</button>
+            </form>
+        </div>
+    </div>
+    <div class="carousel-controls">
+        <span class="carousel-dot active"></span>
+        <span class="carousel-dot"></span>
+        <span class="carousel-dot"></span>
     </div>
 </div>
 
-<!-- Banner 3 -->
-<div class="banner" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470');">
-    <div class="banner-overlay">
-        <h1>Adventure Awaits</h1>
-        <p>Plan your next great outdoor escape</p>
-    </div>
-</div>
 
 <!-- Filters -->
 <div class="filters">
