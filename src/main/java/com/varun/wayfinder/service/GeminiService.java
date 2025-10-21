@@ -29,17 +29,24 @@ public class GeminiService {
 
     public String generateTravelRoute(String placeName, String country, String description, int days) {
         String prompt = String.format(
-                "Create a detailed %d-day travel itinerary for %s, %s. " +
-                        "Description: %s\n\n" +
-                        "Format the response as a day-by-day itinerary with:\n" +
-                        "- Morning activities\n" +
-                        "- Afternoon activities\n" +
-                        "- Evening activities\n" +
-                        "- Restaurant recommendations\n" +
-                        "- Transportation tips\n" +
-                        "Make it engaging, practical, and include estimated costs in USD.",
+                "You are a professional travel planner. Create a detailed, engaging, and realistic %d-day travel itinerary for %s, %s.\n\n" +
+                        "Traveler's preferences: %s\n\n" +
+                        "Your response should be structured clearly with markdown headings for each day (e.g., 'Day 1: ...').\n" +
+                        "For each day, include the following sections:\n" +
+                        "1. Morning activities – sightseeing, cultural experiences, or nature spots\n" +
+                        "2. Afternoon activities – local attractions, tours, or relaxation options\n" +
+                        "3. Evening activities – nightlife, events, or scenic spots\n" +
+                        "4. Restaurant recommendations – include 2-3 local dining options with cuisine type and estimated cost per person (in USD)\n" +
+                        "5. Transportation tips – best ways to get around (walking, taxi, metro, etc.) and approximate daily cost\n\n" +
+                        "Additional requirements:\n" +
+                        "- Focus on a realistic and enjoyable pace (not too rushed)\n" +
+                        "- Highlight unique local experiences or hidden gems\n" +
+                        "- Include short tips or notes where relevant (e.g., best time to visit, ticket info)\n" +
+                        "- Keep costs and details practical for budget or mid-range travelers\n\n" +
+                        "Return the response in well-formatted markdown, ready to display directly to users.",
                 days, placeName, country, description
         );
+
 
         try {
             Map<String, Object> requestBody = new HashMap<>();
