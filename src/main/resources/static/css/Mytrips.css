@@ -2,7 +2,7 @@ body {
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f6f8;
+    background-color: #111827; /* Dark background */
     color: #333;
 }
 
@@ -10,7 +10,7 @@ body {
 main {
     max-width: 100%;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 45px 1rem;
 }
 
 h1 {
@@ -120,7 +120,7 @@ h1 {
 .trip-card {
     min-width: 250px;
     max-width: 250px;
-    background-color: white;
+    background-color: #1f2937;
     border-radius: 10px;
     padding: 1rem;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -146,7 +146,7 @@ h1 {
 .trip-name {
     font-weight: 600;
     font-size: 1.1rem;
-    color: #333;
+    color: #10b47e;  /* Green font */
 }
 
 /* Status Badge */
@@ -185,7 +185,7 @@ h1 {
 .trip-dates {
     font-size: 0.9rem;
     margin-bottom: 1rem;
-    color: #555;
+    color: #94a3b8;  /* White font */
     font-weight: 500;
 }
 
@@ -388,15 +388,16 @@ h1 {
 .trip-notes {
     margin: 15px 0;
     padding: 12px;
-    background: #f8f9fa;
     border-radius: 8px;
     border-left: 4px solid #2e7d32;
+    background-color: #26303d;
+    color: #94a3b8;  /* White font */
 }
 
 .trip-notes h4 {
     margin: 0 0 10px 0;
     font-size: 0.95rem;
-    color: #1b5e20;
+    color: #10b47e;  /* Green font */
     font-weight: 600;
 }
 
@@ -411,7 +412,7 @@ h1 {
     font-size: 0.85rem;
     line-height: 1.6;
     margin: 0;
-    color: #424242;
+    color: #94a3b8;  /* White font */
     background: none;
     padding: 0;
 }
@@ -454,7 +455,7 @@ h1 {
 }
 
 .modal-content {
-    background: white;
+    background-color: #1f2937; /* Box Colour */
     border-radius: 16px;
     max-width: 800px;
     width: 100%;
@@ -478,11 +479,11 @@ h1 {
 
 .modal-header {
     padding: 24px 28px;
-    border-bottom: 2px solid #e8f5e9;
+    border-bottom: 2px solid #10b47e;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #f1f8e9 0%, #ffffff 100%);
+    background-color: #111827; /* Dark background */
     border-radius: 16px 16px 0 0;
 }
 
@@ -528,14 +529,14 @@ h1 {
     font-size: 0.95rem;
     line-height: 1.7;
     margin: 0;
-    color: #212121;
+    color: #94a3b8;  /* White font */
 }
 
 .modal-footer {
     padding: 16px 28px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid #10b47e;
     text-align: right;
-    background: #fafafa;
+    background-color: #111827; /* Dark background */
     border-radius: 0 0 16px 16px;
 }
 

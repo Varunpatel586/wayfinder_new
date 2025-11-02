@@ -2,13 +2,15 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #f5f5f5;
     color: #333;
+    background-color: #111827; /* Dark background */
 }
 
 .place-details-container {
     max-width: 1400px;
     margin: 0 auto;
+    padding-top: 85px;
+    background-color: #111827; /* Dark background */
 }
 
 /* Hero Section */
@@ -62,13 +64,15 @@ body {
     padding: 30px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-bottom: 30px;
+    background-color: #1f2937; /* Box Colour */
+    color: #94a3b8;  /* White font */
 }
 
 .info-card h2,
 .route-generator-card h2,
 .add-trip-card h3,
 .quick-info-card h3 {
-    color: #0d8a4d;
+    color: #10b47e;  /* Green font */
     margin-top: 0;
 }
 
@@ -107,7 +111,7 @@ body {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #333;
+    color: #94a3b8;  /* White font */
 }
 
 .form-group input,
@@ -115,10 +119,12 @@ body {
 .form-group textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #10b17c;
     border-radius: 8px;
     font-size: 14px;
     font-family: inherit;
+    background-color: #26303d;
+    color: #94a3b8;  /* White font */
 }
 
 .form-group input:focus,

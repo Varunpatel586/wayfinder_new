@@ -116,7 +116,7 @@ body {
 
 .banner-search-box button {
   padding: 10px 16px;
-  border-radius: 50%;
+  border-radius: 100%;
   border: none;
   background: var(--emerald);
   color: white;

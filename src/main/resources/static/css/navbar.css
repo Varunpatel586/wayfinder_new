@@ -7,9 +7,10 @@
 }
 
 body {
-    background-color: #f7fdf9;
+    background-color: #111827; /* Dark background */
     color: #1b3a2a;
     line-height: 1.6;
+
 }
 
 a {
@@ -86,13 +87,13 @@ nav a:hover {
 
 /* Button */
 .btn {
-    background-color: #ffffff;
-    color: #2d6a4f;
+    background-color: #10b981;
+    color: white;
     padding: 8px 22px;
     border-radius: 25px;
     font-weight: 600;
     transition: all 0.3s ease-in-out;
-    cursor: pointer; /* ✅ Ensure cursor shows it's clickable */
+    cursor: pointer;
 }
 
 .btn:hover {
