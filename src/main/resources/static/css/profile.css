@@ -1,10 +1,9 @@
 :root {
   --background-dark: #151E2D;
-  --primary-green: #34e3a3;
+--primary-green: #10b17c;
   --header-blur: rgba(45,106,79,0.2);
-  --font-main: 'Montserrat', Arial, sans-serif;
-  --accent: #34e3a3;
-  --form-bg: rgba(255,255,255,0.1);
+  --font-main: Arial, sans-serif;
+  --accent: #10b17c;
   --input-bg: #232f46;
   --input-border: #3d4b63;
   --text-light: #e3e8ef;
@@ -22,12 +21,12 @@ body {
   color: var(--text-light);
   min-height: 100vh;
   position: relative;
+
 }
 body::before {
   content: "";
   background-color: #111827; /* Dark background */
   opacity: 0.9;
-  filter: brightness(1.2);
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: -1;
@@ -35,7 +34,7 @@ body::before {
 
 /* Header (navbar fragment stays as is) */
 .top-padding {
-  padding-top: 100px; /* For fixed navbar */
+  padding-top: 87px; /* For fixed navbar */
 }
 
 /* Profile container */
