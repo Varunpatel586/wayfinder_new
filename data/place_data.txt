@@ -1,128 +1,134 @@
+-- ==============================================
+-- 🌍 WayFinder Database Setup and Seed Script
+-- ==============================================
 
-## 🔧 Step 1: Add Missing Columns
+-- 🔧 Step 1: Open SQLite in Git Bash
+-- Run these commands in your terminal:
+-- ---------------------------------------------
+-- cd /e/CODES/pbl/wayfinder_new/data
+-- sqlite3 users.db
+-- ---------------------------------------------
 
-Open SQLite in Git Bash:
-
-```bash
-cd /e/CODES/pbl/wayfinder_new/data
-sqlite3 users.db
-```
-
-Then run these ALTER TABLE commands:
-
-```sql
--- Add missing columns
-ALTER TABLE places ADD COLUMN category TEXT;
-ALTER TABLE places ADD COLUMN country TEXT;
-
--- Verify columns were added
+-- ✅ Step 2: Check the Schema
+-- Check schema
 .schema places
-```
 
-You should now see `category` and `country` in the output.
+-- 🏝️ Step 3: Insert Places Data
+-- (INSERT OR IGNORE used to avoid duplicate errors)
 
----
-
-## 🏝️ Step 2: Insert Dummy Places (Updated)
-
-Now insert the data **without** the missing columns error:
-
-```sql
-INSERT INTO places (id, name, address, short_description, description, latitude, longitude, average_rating, review_count, category, country, created_at, added_by_user_id) VALUES
+INSERT OR IGNORE INTO places (id, name, address, short_description, description, latitude, longitude, average_rating, review_count, category, country, created_at, added_by_user_id) VALUES
 (1, 'Santorini', 'Santorini, Greece', 'Stunning sunsets and white architecture', 'Santorini is famous for its dramatic views, stunning sunsets, and unique white-washed buildings with blue domes. A perfect romantic getaway.', 36.3932, 25.4615, 4.8, 1523, 'beach', 'Greece', datetime('now'), 1),
-
 (2, 'Banff National Park', 'Alberta, Canada', 'Breathtaking mountain landscapes', 'Experience the pristine beauty of the Canadian Rockies with turquoise lakes, snow-capped mountains, and abundant wildlife.', 51.4968, -115.9281, 4.9, 2341, 'mountain adventure', 'Canada', datetime('now'), 1),
-
 (3, 'Bali', 'Bali, Indonesia', 'Tropical paradise with rich culture', 'Discover ancient temples, lush rice terraces, pristine beaches, and warm hospitality in this Indonesian island paradise.', -8.3405, 115.0920, 4.7, 3156, 'beach adventure', 'Indonesia', datetime('now'), 1),
-
 (4, 'Tokyo', 'Tokyo, Japan', 'Where tradition meets future', 'Experience the perfect blend of ancient temples and cutting-edge technology in Japan''s bustling capital city.', 35.6762, 139.6503, 4.6, 2876, 'city', 'Japan', datetime('now'), 1),
-
 (5, 'Swiss Alps', 'Switzerland', 'Majestic alpine adventure', 'Ski pristine slopes, hike scenic trails, and experience charming mountain villages in the heart of Europe.', 46.5197, 8.3093, 4.9, 1897, 'mountain adventure', 'Switzerland', datetime('now'), 1),
-
 (6, 'Maldives', 'Maldives', 'Luxury island escape', 'Crystal-clear waters, overwater bungalows, and vibrant coral reefs make this the ultimate tropical getaway.', 3.2028, 73.2207, 4.8, 2134, 'beach', 'Maldives', datetime('now'), 1),
-
 (7, 'Paris', 'Paris, France', 'The City of Light and Love', 'Iconic landmarks, world-class museums, charming cafes, and romantic ambiance await in the French capital.', 48.8566, 2.3522, 4.7, 4521, 'city', 'France', datetime('now'), 1),
-
 (8, 'Machu Picchu', 'Cusco Region, Peru', 'Ancient Incan citadel', 'Trek to this UNESCO World Heritage site and witness breathtaking ruins set high in the Andes Mountains.', -13.1631, -72.5450, 4.9, 1765, 'mountain adventure', 'Peru', datetime('now'), 1),
-
 (9, 'Dubai', 'Dubai, UAE', 'Luxury and innovation in the desert', 'Experience futuristic architecture, luxury shopping, indoor skiing, and golden desert dunes.', 25.2048, 55.2708, 4.5, 3289, 'city adventure', 'UAE', datetime('now'), 1),
-
 (10, 'Iceland', 'Reykjavik, Iceland', 'Land of fire and ice', 'Witness the Northern Lights, explore glaciers, geysers, and volcanic landscapes in this Nordic wonderland.', 64.9631, -19.0208, 4.8, 1543, 'adventure', 'Iceland', datetime('now'), 1),
-
 (11, 'Amalfi Coast', 'Campania, Italy', 'Stunning coastal beauty', 'Drive along dramatic cliffs, explore colorful villages, and savor authentic Italian cuisine with Mediterranean views.', 40.6333, 14.6029, 4.7, 1987, 'beach city', 'Italy', datetime('now'), 1),
+(12, 'New York City', 'New York, USA', 'The city that never sleeps', 'Experience Broadway shows, world-famous landmarks, diverse cuisine, and endless entertainment options.', 40.7128, -74.0060, 4.6, 5432, 'city', 'USA', datetime('now'), 1),
+(13, 'Kyoto', 'Kyoto, Japan', 'Temples, gardens, and traditions', 'Kyoto is home to ancient shrines, bamboo forests, traditional tea houses, and breathtaking temples surrounded by cherry blossoms.', 35.0116, 135.7681, 4.8, 2456, 'cultural city', 'Japan', datetime('now'), 1),
+(14, 'Cappadocia', 'Nevsehir, Turkey', 'Hot air balloons and cave hotels', 'Cappadocia offers surreal rock formations, underground cities, and unforgettable sunrise balloon rides over fairy chimneys.', 38.6431, 34.8270, 4.9, 1678, 'adventure', 'Turkey', datetime('now'), 1),
+(15, 'Petra', 'Ma''an, Jordan', 'The Rose City carved in stone', 'Petra, a UNESCO World Heritage Site, is an archaeological wonder famous for its rock-cut architecture and ancient history.', 30.3285, 35.4444, 4.8, 1894, 'historical adventure', 'Jordan', datetime('now'), 1),
+(16, 'Venice', 'Veneto, Italy', 'Romantic canals and bridges', 'Explore Venice''s iconic canals, gondola rides, and Renaissance architecture in this floating Italian masterpiece.', 45.4408, 12.3155, 4.7, 3721, 'city romance', 'Italy', datetime('now'), 1),
+(17, 'Queenstown', 'Otago, New Zealand', 'Adventure capital of the world', 'From bungee jumping to skiing, Queenstown offers thrilling outdoor adventures amid stunning lake and mountain scenery.', -45.0312, 168.6626, 4.9, 2034, 'mountain adventure', 'New Zealand', datetime('now'), 1),
+(18, 'Sahara Desert', 'Merzouga, Morocco', 'Golden dunes and starry nights', 'Experience camel rides, desert camps, and endless dunes under breathtaking night skies in the world''s largest hot desert.', 31.1244, -4.0113, 4.8, 1421, 'desert adventure', 'Morocco', datetime('now'), 1),
+(19, 'Prague', 'Prague, Czech Republic', 'Fairy-tale architecture and charm', 'Prague enchants visitors with its medieval streets, grand castles, and the famous Charles Bridge.', 50.0755, 14.4378, 4.7, 2567, 'city culture', 'Czech Republic', datetime('now'), 1),
+(20, 'Maui', 'Hawaii, USA', 'Tropical paradise of the Pacific', 'Maui offers lush rainforests, waterfalls, black sand beaches, and scenic drives along the Hana Highway.', 20.7984, -156.3319, 4.9, 3245, 'beach adventure', 'USA', datetime('now'), 1),
+(21, 'Seoul', 'Seoul, South Korea', 'Modern city with ancient roots', 'A vibrant metropolis blending high-tech culture, delicious food, and serene palaces.', 37.5665, 126.9780, 4.7, 3108, 'city culture', 'South Korea', datetime('now'), 1),
+(22, 'Great Barrier Reef', 'Queensland, Australia', 'World''s largest coral reef', 'Dive into an underwater paradise with vibrant coral formations, marine life, and crystal-clear waters.', -18.2871, 147.6992, 4.9, 2789, 'ocean adventure', 'Australia', datetime('now'), 1);
 
-(12, 'New York City', 'New York, USA', 'The city that never sleeps', 'Experience Broadway shows, world-famous landmarks, diverse cuisine, and endless entertainment options.', 40.7128, -74.0060, 4.6, 5432, 'city', 'USA', datetime('now'), 1);
-```
 
----
-
-## 📸 Step 3: Insert Place Images
-
-```sql
-INSERT INTO place_images (id, place_id, image_url, is_primary) VALUES
+-- 📸 Step 4: Insert Place Images
+INSERT OR IGNORE INTO place_images (id, place_id, image_url, is_primary) VALUES
 -- Santorini
 (1, 1, 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 1),
 (2, 1, 'https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e', 0),
-
 -- Banff
 (3, 2, 'https://images.unsplash.com/photo-1501785888041-af3ef285b470', 1),
 (4, 2, 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4', 0),
-
 -- Bali
 (5, 3, 'https://images.unsplash.com/photo-1537996194471-e657df975ab4', 1),
 (6, 3, 'https://images.unsplash.com/photo-1555400038-63f526b1c1a5', 0),
-
 -- Tokyo
 (7, 4, 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf', 1),
 (8, 4, 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26', 0),
-
 -- Swiss Alps
 (9, 5, 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7', 1),
 (10, 5, 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4', 0),
-
 -- Maldives
 (11, 6, 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8', 1),
 (12, 6, 'https://images.unsplash.com/photo-1573843981267-be1999ff37cd', 0),
-
 -- Paris
 (13, 7, 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34', 1),
 (14, 7, 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f', 0),
-
 -- Machu Picchu
 (15, 8, 'https://images.unsplash.com/photo-1587595431973-160d0d94add1', 1),
 (16, 8, 'https://images.unsplash.com/photo-1526392060635-9d6019884377', 0),
-
 -- Dubai
 (17, 9, 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c', 1),
 (18, 9, 'https://images.unsplash.com/photo-1518684079-3c830dcef090', 0),
-
 -- Iceland
 (19, 10, 'https://images.unsplash.com/photo-1504829857797-ddff29c27927', 1),
 (20, 10, 'https://images.unsplash.com/photo-1520769945061-0a448c463865', 0),
-
 -- Amalfi Coast
 (21, 11, 'https://images.unsplash.com/photo-1534445538923-80d6abf49c00', 1),
 (22, 11, 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa', 0),
-
 -- New York
 (23, 12, 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9', 1),
-(24, 12, 'https://images.unsplash.com/photo-1491447120211-e0d8b1f0a743', 0);
-```
+(24, 12, 'https://images.unsplash.com/photo-1491447120211-e0d8b1f0a743', 0),
+-- Kyoto
+(25, 13, 'https://images.unsplash.com/photo-1506744038136-46273834b3fb', 1),
+(26, 13, 'https://images.unsplash.com/photo-1506744038136-46273834b3fb', 0),
+-- Cappadocia
+(27, 14, 'https://images.unsplash.com/photo-1504198458649-3128b932f49b', 1),
+(28, 14, 'https://images.unsplash.com/photo-1493558103817-58b2924bce98', 0),
+-- Petra
+(29, 15, 'https://images.unsplash.com/photo-1566438480900-0609be27a4be', 1),
+(30, 15, 'https://images.unsplash.com/photo-1561470508-1c6cce2cfb1f', 0),
+-- Venice
+(31, 16, 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 1),
+(32, 16, 'https://images.unsplash.com/photo-1527430253228-e93688616381', 0),
+-- Queenstown
+(33, 17, 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 1),
+(34, 17, 'https://images.unsplash.com/photo-1549887534-3db1bd59dcca', 0),
+-- Sahara Desert
+(35, 18, 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 1),
+(36, 18, 'https://images.unsplash.com/photo-1501785888041-af3ef285b470', 0),
+-- Prague
+(37, 19, 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 1),
+(38, 19, 'https://images.unsplash.com/photo-1527694224013-49c4b04b1db7', 0),
+-- Maui
+(39, 20, 'https://images.unsplash.com/photo-1493558103817-58b2924bce98', 1),
+(40, 20, 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 0),
+-- Seoul
+(41, 21, 'https://images.unsplash.com/photo-1551892589-865f69869464', 1),
+(42, 21, 'https://images.unsplash.com/photo-1509223197845-458d87318791', 0),
+-- Great Barrier Reef
+(43, 22, 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 1),
+(44, 22, 'https://images.unsplash.com/photo-1502082553048-f009c37129b9', 0);
 
----
 
-## ✅ Step 4: Verify
+-- ✅ Step 5: Verify Data
+SELECT COUNT(*) AS total_places FROM places;
+SELECT COUNT(*) AS total_images FROM place_images;
+SELECT id, name, category, country FROM places LIMIT 10;
 
-```sql
--- Check we have 12 places
-SELECT COUNT(*) FROM places;
-
--- View sample with new columns
-SELECT id, name, category, country FROM places LIMIT 5;
-
--- Check images
-SELECT COUNT(*) FROM place_images;
-
--- Exit
 .exit
-```
+
+-- 🖼️ To Replace Images: Replace Broken Unsplash Images (OpaqueResponseBlocking Fix)
+-- These commands update URLs for images that failed to load
+UPDATE place_images
+SET image_url = 'https://images.unsplash.com/photo-1627933577672-d191b77baa9c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170'
+WHERE id = 27;  -- Cappadocia primary
+
+UPDATE place_images
+SET image_url = 'https://images.unsplash.com/photo-1533656338503-b22f63e96cd8?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1073'
+WHERE id = 21;  -- Amalfi Coast primary
+
+UPDATE place_images
+SET image_url = 'https://images.unsplash.com/photo-1517154421773-0529f29ea451?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170'
+WHERE id = 41;  -- Seoul primary
+
