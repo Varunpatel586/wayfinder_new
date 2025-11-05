@@ -8,5 +8,4 @@ public class WayfinderApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WayfinderApplication.class, args);
 	}
-
 }
