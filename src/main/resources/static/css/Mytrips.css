@@ -66,13 +66,13 @@ h1 {
 }
 
 .no-trips-content h2 {
-    color: #333;
+    color: #10b47e;  /* Green font */
     font-size: 24px;
     margin-bottom: 10px;
 }
 
 .no-trips-content p {
-    color: #666;
+    color: #94a3b8;  /* White font */
     font-size: 16px;
     margin-bottom: 25px;
 }

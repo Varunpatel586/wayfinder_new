@@ -29,7 +29,7 @@ public class GeminiService {
 
     public String generateTravelRoute(String placeName, String country, String description, int days) {
         String prompt = String.format(
-                "You are a professional travel planner. Create a detailed, engaging, and realistic %d-day travel itinerary for %s, %s.\n\n" +
+                "You are a professional travel planner.Check for the news on the place and add that to the very end with the header saying Caution.Create a detailed, engaging, and realistic %d-day travel itinerary for %s, %s.\n\n" +
                         "Traveler's preferences: %s\n\n" +
                         "Your response should be structured clearly with markdown headings for each day (e.g., 'Day 1: ...').\n" +
                         "For each day, include the following sections:\n" +
