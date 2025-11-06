@@ -1,172 +1,233 @@
+/* profile.css — harmonized with place-details & Mytrips */
+
+/* Shared color variables (use the same variables file across pages if possible) */
 :root {
-  --background-dark: #151E2D;
---primary-green: #10b17c;
-  --header-blur: rgba(45,106,79,0.2);
-  --font-main: Arial, sans-serif;
-  --accent: #10b17c;
-  --input-bg: #232f46;
-  --input-border: #3d4b63;
-  --text-light: #e3e8ef;
-  --text-muted: #b8c0d2;
+  --bg: #111827;            /* overall page background */
+  --card: #1f2937;          /* card background */
+  --panel: #26303d;         /* input / panel background */
+  --muted: #94a3b8;         /* secondary text on dark */
+  --accent: #10b47e;        /* primary green */
+  --accent-strong: #0d8a4d; /* darker green for hover/shadows */
+  --input-bg: #232f46;      /* input background */
+  --input-border: #3d4b63;  /* input border */
+  --white: #ffffff;
   --logout-red: #e74c3c;
   --logout-hover: #c0392b;
+  --card-radius: 16px;
+  --container-max: 720px;
+  --font-main: Inter, Arial, sans-serif;
 }
 
-/* Body and background */
-body {
+/* Global body */
+* { box-sizing: border-box; }
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
   font-family: var(--font-main);
-  background: var(--background-dark);
-  color: var(--text-light);
-  min-height: 100vh;
-  position: relative;
-
-}
-body::before {
-  content: "";
-  background-color: #111827; /* Dark background */
-  opacity: 0.9;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: -1;
+  background: var(--bg);
+  color: var(--muted);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Header (navbar fragment stays as is) */
-.top-padding {
-  padding-top: 87px; /* For fixed navbar */
-}
+/* Keep space for fixed navbar */
+.top-padding { height: 87px; }
 
-/* Profile container */
+/* Page container */
 .main-content {
   width: 100%;
-  max-width: 600px;
-  margin: 0px auto 40px auto;
-  background-color: #1f2937; /* Box Colour */
-  border-radius: 20px;
-  padding: 30px 26px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  text-align: center;
+  max-width: var(--container-max);
+  margin: 18px auto 48px;
+  background-color: var(--card);
+  border-radius: calc(var(--card-radius) + 4px);
+  padding: 28px;
+  box-shadow: 0 10px 40px rgba(2,6,23,0.6);
 }
 
 /* Profile card */
 .profile-card {
   display: flex;
-  align-items: center; /* vertically center avatar & info */
-  gap: 20px;           /* space between avatar and info */
-  margin-bottom: 5px;
-  text-align: left;
-  background: rgba(255,255,255,0.05);
-  padding: 20px;
-  border-radius: 15px;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.02);
 }
 
-/* Avatar container */
+/* Avatar wrapper */
 .profile-avatar-bg {
-  width: 90px;
-  height: 90px;
+  width: 88px;
+  height: 88px;
   flex-shrink: 0;
   border-radius: 50%;
   position: relative;
   overflow: hidden;
-  border: 3px solid #10b17c;
+  border: 3px solid var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #232f46; /* fallback */
+  background: var(--input-bg);
+  box-shadow: 0 6px 20px rgba(2,6,23,0.6);
 }
 
-/* Overlay (optional dark layer) */
-.profile-avatar-bg::before {
-  content: "";
-  position: absolute;
-  top:0; left:0; right:0; bottom:0;
-  background-color: #111827; /* Dark background */
-  z-index:1;
-}
-
-/* Actual avatar image */
+/* Avatar image - ensure visible on top */
 .profile-avatar-img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  z-index:2; /* above overlay */
+  display: block;
+  z-index: 2;
 }
 
-/* Profile text */
+/* Profile info */
 .profile-info h3 {
-  font-size: 1.2rem;
-  color: var(--primary-green);
-  margin: 0 0 4px 0;
+  font-size: 1.15rem;
+  color: var(--accent);
+  margin: 0 0 6px 0;
+  font-weight: 700;
 }
 
 .profile-info p {
   margin: 0;
-  color: #b8c0d2;
-  font-size: 0.94rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  opacity: 0.95;
 }
 
-/* Form Section */
+/* Form section */
 .form-section h2 {
-  font-size: 1.17rem;
-  margin: 10px 0 0px;
-  color: var(--primary-green);
+  font-size: 1.05rem;
+  margin: 6px 0 12px;
+  color: var(--accent);
+  font-weight: 700;
 }
+
+/* Form layout */
 .form-group {
-  margin-bottom: 11px;
+  margin-bottom: 12px;
   text-align: left;
 }
 .form-group label {
   display: block;
-  margin-bottom: 2px;
-  font-size: 0.93rem;
-  color: #afbdd3;
-}
-input, select {
-  width: 100%;
-  background: var(--input-bg);
-  border-radius: 8px;
-  border: 1px solid var(--input-border);
-  color: var(--text-light);
-  padding: 8px 10px;
-  font-size: 0.94rem;
-  outline: none;
-  transition: all 0.2s ease;
-}
-input:focus, select:focus {
-  border-color: var(--primary-green);
-  background: #263451;
+  margin-bottom: 6px;
+  color: rgba(255,255,255,0.78);
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
-/* Buttons */
+/* Inputs & selects */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 10px;
+  border: 1px solid var(--input-border);
+  color: var(--white);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+input::placeholder,
+select option[disabled] {
+  color: rgba(255,255,255,0.35);
+}
+
+input:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 6px 22px rgba(13,138,77,0.08);
+  background: rgba(38,48,61,0.9);
+}
+
+/* Buttons — primary */
+button[type="submit"],
 button {
   width: 100%;
   border: none;
-  border-radius: 16px;
-  padding: 11px;
-  font-size: 1.04rem;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 1rem;
   font-weight: 700;
-  margin-top: 7px;
+  margin-top: 10px;
   cursor: pointer;
-  background: var(--primary-green);
-  color: #0f1725;
-  transition: background 0.2s, transform 0.12s;
-}
-button:hover {
-  background: #21bb72;
-  color: #fff;
-  transform: scale(1.03);
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: var(--white);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-/* Logout button */
+button[type="submit"]:hover,
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(13,138,77,0.12);
+}
+
+/* Logout button — destructive */
+.logout-section { margin-top: 12px; }
 .logout-button {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 8px;
   background: var(--logout-red);
-  color: #fff;
+  color: var(--white);
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
 }
+
 .logout-button:hover {
+  transform: translateY(-2px);
   background: var(--logout-hover);
-  transform: scale(1.03);
+  box-shadow: 0 8px 26px rgba(199, 55, 55, 0.12);
+}
+
+/* Small helpers */
+.form-section .row { display: flex; gap: 12px; }
+.form-section .row > * { flex: 1; }
+
+/* Notes / small text */
+.small-text {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    margin: 12px auto 32px;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .profile-card { gap: 12px; padding: 14px; border-radius: 10px; }
+  .profile-avatar-bg { width: 76px; height: 76px; border-width: 2px; }
+  .profile-avatar-img { width: 68px; height: 68px; }
+  .profile-info h3 { font-size: 1rem; }
+}
+
+/* Optional: visually hide heavy overlay if a placeholder image was blocking — ensure avatar visible */
+.profile-avatar-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.18));
+  z-index: 0;
+}
+
+/* Accessibility: focus outlines */
+a:focus, button:focus, input:focus, select:focus {
+  outline: 3px solid rgba(16,180,120,0.12);
+  outline-offset: 2px;
 }
